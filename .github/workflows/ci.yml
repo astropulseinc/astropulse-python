@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # The oldest version the package claims to support, and the newest.
+        python: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      # `make check` is what a contributor runs, so CI cannot drift from it.
+      - run: make check
+
+  generated:
+    # The committed client must be exactly what the document produces: a
+    # hand-edit under _generated/, a stale regeneration, or a model the document
+    # added and nobody regenerated for, all fail here. `git add -A` first,
+    # because a diff alone does not see a file that regeneration created.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: make generate
+      - name: The generated code matches spec/openapi.yaml
+        run: |
+          git add -A
+          git diff --cached --exit-code

@@ -1,0 +1,60 @@
+name: Regenerate from the API document
+
+# The platform's public API document is the source of truth. This fetches it,
+# and only when its version moved regenerates everything derived from it and
+# opens or updates the single regeneration PR.
+#
+# It pulls from a public URL and holds no credential: this repository must never
+# need read access to the platform's source to build its own client.
+on:
+  workflow_dispatch:
+  schedule:
+    # Hourly: a release should not leave the SDK describing the previous API for
+    # long. A run where the version has not moved exits in seconds.
+    - cron: "0 * * * *"
+
+# Only the built-in token, with the least it needs to push the branch and open
+# or update the PR.
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml
+
+      # Compares the served version with the committed spec and writes the spec
+      # only when it changed. `absent` (route not served yet) and `unchanged`
+      # both end the run green without a PR.
+      - name: Fetch and compare the API document
+        id: sync
+        run: make sync
+
+      - name: Regenerate and check
+        if: steps.sync.outputs.status == 'changed'
+        run: |
+          make generate
+          make check
+
+      - name: Open or update the single regeneration PR
+        if: steps.sync.outputs.status == 'changed'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          # One open regeneration PR: reuse this branch so each run updates it
+          # rather than opening a new PR.
+          branch: sdk/release-regenerate
+          delete-branch: false
+          title: "Regenerate from API ${{ steps.sync.outputs.version }}"
+          commit-message: "Regenerate from API ${{ steps.sync.outputs.version }}"
+          body: |
+            The published OpenAPI document changed (version ${{ steps.sync.outputs.version }}).
+            This PR carries the new document and everything generated from it.
+
+            Review the diff as a contract change: a renamed method or a removed
+            field is a breaking change for everyone using this package.

@@ -1,0 +1,39 @@
+name: Release
+
+# Publishing is tag-driven: tag v1.2.3, and that version reaches PyPI.
+# Authentication is Trusted Publishing (OIDC), so no PyPI token is stored here.
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # A tag can be pushed at any commit, and a release cannot be taken back.
+      - name: The tests, style and types, before anything is published
+        run: make check
+
+      - name: The tag and the package version must agree
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME#v}"
+          VERSION="$(python -c 'import pathlib,re;print(re.search(r\'__version__ = "([^"]+)"\', pathlib.Path("src/astropulse/_version.py").read_text()).group(1))')"
+          if [ "${TAG}" != "${VERSION}" ]; then
+            echo "::error::tag ${GITHUB_REF_NAME} does not match the package version ${VERSION}"
+            exit 1
+          fi
+
+      - run: pip install build
+      - run: python -m build
+      # Pinned to a commit: this job can mint a PyPI token through OIDC.
+      - uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33  # release/v1

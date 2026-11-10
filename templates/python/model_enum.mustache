@@ -1,0 +1,58 @@
+{{!
+  Overrides openapi-generator v7.24.0's python/model_enum.mustache (see
+  scripts/generate.sh). The only change from upstream is _missing_: a value this
+  version of the package does not know parses to a member carrying that value,
+  rather than raising, so a value the API adds later cannot break a response.
+  Re-copy the upstream file when the generator version changes, then re-apply.
+}}
+from __future__ import annotations
+import json
+from enum import Enum
+{{#vendorExtensions.x-py-other-imports}}
+{{{.}}}
+{{/vendorExtensions.x-py-other-imports}}
+from typing_extensions import Self
+
+
+class {{classname}}({{vendorExtensions.x-py-enum-type}}, Enum):
+    """
+    {{{description}}}{{^description}}{{{classname}}}{{/description}}
+    """
+
+    """
+    allowed enum values
+    """
+{{#allowableValues}}
+    {{#enumVars}}
+    {{{name}}} = {{{value}}}
+    {{/enumVars}}
+
+    @classmethod
+    def from_json(cls, json_str: str) -> Self:
+        """Create an instance of {{classname}} from a JSON string"""
+        return cls(json.loads(json_str))
+
+    @classmethod
+    def _missing_(cls, value: object) -> Self | None:
+        """Accept a value this version does not know, keeping it as given.
+
+        The API may add values to this enum at any time. One this version does
+        not list parses to a member whose ``value`` is the string received, so
+        it is never lost and is sent back unchanged; it equals no listed member.
+        """
+        if not isinstance(value, {{vendorExtensions.x-py-enum-type}}):
+            return None
+        member = {{vendorExtensions.x-py-enum-type}}.__new__(cls, value)
+        member._name_ = str(value)
+        member._value_ = value
+        return member
+
+    {{#defaultValue}}
+
+    #
+    @classmethod
+    def _missing_value_(cls, value):
+        if value is no_arg:
+            return cls.{{{.}}}
+    {{/defaultValue}}
+{{/allowableValues}}

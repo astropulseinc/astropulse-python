@@ -1,0 +1,87 @@
+[project]
+name = "astropulse"
+dynamic = ["version"]
+description = "The official Python SDK for the AstroPulse Platform API"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "AstroPulse", email = "contact@astropulse.io" }]
+keywords = ["astropulse", "kubernetes", "inference", "model serving", "sdk"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Typing :: Typed",
+]
+dependencies = [
+  "urllib3>=2,<3",
+  "python-dateutil>=2.8",
+  "pydantic>=2",
+  "typing-extensions>=4.7",
+]
+
+[project.optional-dependencies]
+# The examples that call a deployed model speak plain HTTP to it, which is not
+# this package's job and so not one of its dependencies.
+examples = ["requests>=2.31"]
+
+[project.urls]
+Homepage = "https://astropulse.io"
+Documentation = "https://astropulse.io/docs"
+Source = "https://github.com/astropulseinc/astropulse-python"
+Issues = "https://github.com/astropulseinc/astropulse-python/issues"
+Changelog = "https://github.com/astropulseinc/astropulse-python/blob/main/CHANGELOG.md"
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.11", "pydantic>=2"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# One source of truth for the version: the tag check at release reads this file,
+# and so does the package.
+[tool.hatch.version]
+path = "src/astropulse/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/astropulse"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "scripts", "tests"]
+# Generated files are the generator's business, not this repository's.
+extend-exclude = ["src/astropulse/_generated", "src/astropulse/models.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+# The examples and the tests are the code a reader copies, so they are checked
+# like the package is. The pydantic plugin is what teaches a checker that a
+# generated model takes its fields by name as well as by alias -- anyone type
+# checking their own code against this package wants it too.
+plugins = ["pydantic.mypy"]
+files = ["src/astropulse", "scripts", "tests", "examples"]
+# scripts/ holds the build helpers (api_version), imported by the tests.
+mypy_path = "scripts"
+# Generated code is the generator's business, not this repository's.
+exclude = ["src/astropulse/_generated/"]
+
+[[tool.mypy.overrides]]
+module = ["astropulse._generated.*", "astropulse.models"]
+ignore_errors = true
+ignore_missing_imports = true
+implicit_reexport = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# scripts/ holds the build helpers (api_version) the tests import.
+pythonpath = ["scripts"]

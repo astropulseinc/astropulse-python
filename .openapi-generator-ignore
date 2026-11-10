@@ -1,0 +1,17 @@
+# Files this repository owns. The generator never overwrites them, which is how
+# openapi-generator is meant to be mixed with hand-written code
+# (openapi-generator.tech/docs/customization).
+#
+# Everything else -- src/astropulse/_generated/**, src/astropulse/models.py
+# and docs/** -- is generated and must never be edited by hand.
+README.md
+pyproject.toml
+.github/**
+scripts/**
+examples/**
+tests/**
+src/astropulse/__init__.py
+src/astropulse/_client.py
+src/astropulse/_errors.py
+src/astropulse/_version.py
+src/astropulse/py.typed

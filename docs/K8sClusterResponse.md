@@ -1,0 +1,32 @@
+# K8sClusterResponse
+
+
+## Properties
+
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**data** | [**K8sCluster**](K8sCluster.md) |  | [optional] 
+**id** | **str** |  | [optional] 
+**message** | **str** |  | [optional] 
+**status** | **str** |  | [optional] 
+
+## Example
+
+```python
+from astropulse._generated.models.k8s_cluster_response import K8sClusterResponse
+
+# TODO update the JSON string below
+json = "{}"
+# create an instance of K8sClusterResponse from a JSON string
+k8s_cluster_response_instance = K8sClusterResponse.from_json(json)
+# print the JSON string representation of the object
+print(K8sClusterResponse.to_json())
+
+# convert the object into a dict
+k8s_cluster_response_dict = k8s_cluster_response_instance.to_dict()
+# create an instance of K8sClusterResponse from a dict
+k8s_cluster_response_from_dict = K8sClusterResponse.from_dict(k8s_cluster_response_dict)
+```
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+
