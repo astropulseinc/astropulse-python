@@ -5,10 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**iam_role_arn** | **str** | The role the Node Autoscaling controller assumes in your AWS account (the controller role output of the Node Autoscaling prerequisites stack AstroPulse generates for your account), for a registered EKS cluster only. Leave it empty on a cluster AstroPulse created, which gets its own role. | [optional] 
-**instance_profile** | **str** | The instance profile attached to the nodes Node Autoscaling launches. | [optional] 
-**security_group_tags** | **List[str]** | Tags, each written key&#x3D;value, that select the security groups for those nodes. | [optional] 
-**subnet_tags** | **List[str]** | Tags, each written key&#x3D;value, that select the subnets for the nodes Node Autoscaling launches. | [optional] 
+**iam_role_arn** | **str** | The role Node Autoscaling runs as in your AWS account, from the prerequisites stack AstroPulse generates, for a registered EKS cluster. Leave it empty on a cluster AstroPulse created. | [optional] 
+**instance_profile** | **str** | The instance profile given to the nodes Node Autoscaling starts. | [optional] 
+**security_group_tags** | **List[str]** | Tags, written key&#x3D;value, that pick the security groups for new nodes. | [optional] 
+**subnet_tags** | **List[str]** | Tags, written key&#x3D;value, that pick the subnets for new nodes. | [optional] 
 
 ## Example
 

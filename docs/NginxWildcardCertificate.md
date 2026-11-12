@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**domain** | **str** | The domain the certificate covers, without \&quot;*.\&quot;: apps.example.com covers apps.example.com and every name one level below it. | [optional] 
-**enabled** | **bool** | Issues the certificate and serves it to applications using TLS mode &#x60;Wildcard&#x60;. | [optional] 
+**domain** | **str** | The domain the certificate covers, without &#x60;*.&#x60;: apps.example.com covers apps.example.com and every name directly under it. | [optional] 
+**enabled** | **bool** | Issues the wildcard certificate and serves it to applications with TLS mode &#x60;Wildcard&#x60;. | [optional] 
 
 ## Example
 

@@ -1871,10 +1871,10 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Operation history retrieved successfully |  -  |
-**400** | Invalid cluster ID or missing location parameters |  -  |
+**400** | A location parameter has an invalid value |  -  |
 **401** | Missing or invalid API key |  -  |
 **403** | User does not have permission to view operation history |  -  |
-**404** | Cluster not found and no location parameters provided |  -  |
+**404** | No operation history for the cluster |  -  |
 **429** | Rate limit exceeded |  -  |
 **500** | Internal server error |  -  |
 **503** | Service temporarily unavailable; retry after the Retry-After interval |  -  |

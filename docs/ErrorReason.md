@@ -49,6 +49,8 @@
 
 * `AddonReleaseUnavailable` (value: `'AddonReleaseUnavailable'`)
 
+* `AddonSizingRejected` (value: `'AddonSizingRejected'`)
+
 * `AddonStatusFailed` (value: `'AddonStatusFailed'`)
 
 * `AddonVersionRetired` (value: `'AddonVersionRetired'`)

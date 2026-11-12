@@ -5,12 +5,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**enabled** | **bool** | Turns horizontal autoscaling on for the proxy. | [optional] 
-**max_replicas** | **int** | The replica ceiling. Empty takes the AstroPulse default (10). | [optional] [default to 10]
-**metric** | [**GatewayScalingMetric**](GatewayScalingMetric.md) | The one signal replicas follow. Empty means CPU. | [optional] 
-**min_replicas** | **int** | The replica floor. Empty takes the AstroPulse default (2). | [optional] [default to 2]
-**target_cpu_percent** | **int** | The CPU utilisation to hold under metric CPU. Empty takes the AstroPulse default (70). | [optional] [default to 70]
-**target_requests_per_second** | **int** | The per-replica request rate to hold under metric RequestsPerSecond. Empty takes the AstroPulse default (500). | [optional] [default to 500]
+**enabled** | **bool** | Turns automatic scaling of the gateway proxy on. | [optional] 
+**max_replicas** | **int** | The most copies that may run. Left out, it is 10. | [optional] [default to 10]
+**metric** | [**GatewayScalingMetric**](GatewayScalingMetric.md) | What scaling follows. Left out, it is &#x60;CPU&#x60;. | [optional] 
+**min_replicas** | **int** | The fewest copies that keep running. Left out, it is 2. | [optional] [default to 2]
+**target_cpu_percent** | **int** | The average CPU use, in percent, that scaling keeps each copy at. Left out, it is 70. | [optional] [default to 70]
+**target_requests_per_second** | **int** | The requests per second each copy handles before another is added. Left out, it is 500. | [optional] [default to 500]
 
 ## Example
 

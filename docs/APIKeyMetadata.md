@@ -19,7 +19,7 @@ Name | Type | Description | Notes
 **revoked_by** | **str** | Identifies the administrator who revoked the credential. | [optional] 
 **revoked_reason** | **str** | Explains why the credential was revoked. | [optional] 
 **service_account_id** | **str** | The service account that owns the key; absent for personal keys. | [optional] 
-**source** | [**APIKeySource**](APIKeySource.md) | Where the key was issued: CLI or UI for a personal key, API for a service account key. | [optional] 
+**source** | [**APIKeySource**](APIKeySource.md) | Where the key was issued: CLI, UI or Nova for a personal key, API for a service account key. | [optional] 
 **status** | [**APIKeyLifecycleStatus**](APIKeyLifecycleStatus.md) | The credential lifecycle state. | [optional] 
 **user_id** | **str** | The user who owns a personal key; empty for service-account keys. | [optional] 
 

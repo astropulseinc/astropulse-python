@@ -5,11 +5,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**hosted_zone_id** | **str** | Pins the Route 53 hosted zone (&#x60;aws&#x60;). Empty lets cert-manager find the zone by name. | [optional] 
-**project** | **str** | The Cloud DNS project holding the zone (&#x60;gcp&#x60;). Required for &#x60;gcp&#x60;. | [optional] 
-**provider** | [**CertManagerDNSProvider**](CertManagerDNSProvider.md) | The DNS provider holding the zone: &#x60;aws&#x60;, &#x60;gcp&#x60; or &#x60;azure&#x60;. Empty selects the cluster&#39;s own provider. | [optional] 
-**resource_group** | **str** | The resource group holding the Azure DNS zone. Required for &#x60;azure&#x60;. | [optional] 
-**subscription_id** | **str** | The Azure subscription holding the DNS zone. Required for &#x60;azure&#x60;. | [optional] 
+**hosted_zone_id** | **str** | The Route 53 hosted zone to use. Left out, cert-manager finds the zone by name. | [optional] 
+**project** | **str** | The Google Cloud project that holds the Cloud DNS zone. Required for &#x60;gcp&#x60;. | [optional] 
+**provider** | [**CertManagerDNSProvider**](CertManagerDNSProvider.md) | The DNS service that holds the zone. Left out, it is the cluster&#39;s own cloud. | [optional] 
+**resource_group** | **str** | The Azure resource group that holds the DNS zone. Required for &#x60;azure&#x60;. | [optional] 
+**subscription_id** | **str** | The Azure subscription that holds the DNS zone. Required for &#x60;azure&#x60;. | [optional] 
 
 ## Example
 

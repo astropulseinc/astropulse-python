@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**endpoint** | **str** | The address of a Prometheus, reachable from the cluster, that already collects the metrics of the workloads being scaled. Scaling on request rate finds a workload&#39;s metrics by their &#x60;namespace&#x60; label. | [optional] 
+**endpoint** | **str** | The address of a Prometheus, reachable from the cluster, that already collects the scaled workloads&#39; metrics labelled by &#x60;namespace&#x60;. | [optional] 
 
 ## Example
 

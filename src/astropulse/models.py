@@ -81,10 +81,12 @@ from ._generated.models.add_user_to_organization_request import AddUserToOrganiz
 from ._generated.models.addon_auto_scaling_config import AddonAutoScalingConfig as AddonAutoScalingConfig
 from ._generated.models.addon_availability import AddonAvailability as AddonAvailability
 from ._generated.models.addon_cloud_access import AddonCloudAccess as AddonCloudAccess
+from ._generated.models.addon_component_sizing import AddonComponentSizing as AddonComponentSizing
 from ._generated.models.addon_configuration_field import AddonConfigurationField as AddonConfigurationField
 from ._generated.models.addon_configuration_format import AddonConfigurationFormat as AddonConfigurationFormat
 from ._generated.models.addon_field_condition import AddonFieldCondition as AddonFieldCondition
 from ._generated.models.addon_field_type import AddonFieldType as AddonFieldType
+from ._generated.models.addon_resource_requirements import AddonResourceRequirements as AddonResourceRequirements
 from ._generated.models.addon_resources import AddonResources as AddonResources
 from ._generated.models.addon_service_account import AddonServiceAccount as AddonServiceAccount
 from ._generated.models.addon_unavailable_value import AddonUnavailableValue as AddonUnavailableValue
@@ -823,10 +825,12 @@ __all__ = [
     "AddonAutoScalingConfig",
     "AddonAvailability",
     "AddonCloudAccess",
+    "AddonComponentSizing",
     "AddonConfigurationField",
     "AddonConfigurationFormat",
     "AddonFieldCondition",
     "AddonFieldType",
+    "AddonResourceRequirements",
     "AddonResources",
     "AddonServiceAccount",
     "AddonUnavailableValue",

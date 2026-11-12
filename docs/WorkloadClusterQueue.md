@@ -5,10 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**cohort** | **str** | A name shared by queues that lend each other unused quota: a queue in a cohort may borrow what the others are not using, and gives its own idle quota back in return. Queues sharing one pool of hardware usually share a cohort. Empty keeps this queue&#39;s quota strictly to itself. | [optional] 
-**name** | **str** | What a model application sets in &#x60;model.queue.name&#x60; to run through this queue. | [optional] 
-**preemption** | [**WorkloadQueuePreemption**](WorkloadQueuePreemption.md) | What happens when this queue is full and new work arrives. Omitted is LowerPriority. | [optional] 
-**quota** | [**WorkloadQueueQuota**](WorkloadQueueQuota.md) | How much this queue may hold at once. The only queue takes the cluster&#39;s whole accelerator ceiling unless its quota sets gpu (an explicit 0 means no accelerators); a queue among several with gpu unset gets no GPU quota. | [optional] 
+**cohort** | **str** | A group name for queues that lend each other unused capacity. Left out, the queue keeps its capacity to itself. | [optional] 
+**name** | **str** | The queue&#39;s name, which a model application sets in &#x60;model.queue.name&#x60;. | [optional] 
+**preemption** | [**WorkloadQueuePreemption**](WorkloadQueuePreemption.md) | What happens when the queue is full and new work arrives. Left out, it is &#x60;LowerPriority&#x60;. | [optional] 
+**quota** | [**WorkloadQueueQuota**](WorkloadQueueQuota.md) | How much CPU, memory and GPU the queue may use at once. | [optional] 
 
 ## Example
 

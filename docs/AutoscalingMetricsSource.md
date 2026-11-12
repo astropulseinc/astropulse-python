@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**prometheus** | [**AutoscalingPrometheusSource**](AutoscalingPrometheusSource.md) | The only backend this version supports. | [optional] 
+**prometheus** | [**AutoscalingPrometheusSource**](AutoscalingPrometheusSource.md) | A Prometheus to read metrics from, the one kind of source supported. | [optional] 
 
 ## Example
 

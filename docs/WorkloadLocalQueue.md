@@ -5,9 +5,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**cluster_queue** | **str** | The LocalQueue binds to. Empty means default. | [optional] 
-**name** | **str** | Of the LocalQueue. Empty takes the ClusterQueue&#39;s name. | [optional] 
-**namespace** | **str** | The LocalQueue lives in. It must already exist. | [optional] 
+**cluster_queue** | **str** | The queue the namespace sends work to. Left out, it is &#x60;default&#x60;. | [optional] 
+**name** | **str** | The connection&#39;s name. Left out, it is the queue&#39;s name. | [optional] 
+**namespace** | **str** | The namespace that sends work to the queue; it must already exist. | [optional] 
 
 ## Example
 

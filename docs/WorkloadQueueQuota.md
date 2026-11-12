@@ -5,9 +5,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**cpu** | **str** | A Kubernetes quantity such as \&quot;64\&quot;. Empty means bounded only by the cluster itself. | [optional] 
-**gpu** | **int** | How many accelerators the queue may hold across the cluster&#39;s GPU flavor. Checked against what the cluster&#39;s accelerator node groups and GPU node pools can ever provision. Unset and 0 differ: unset on the only queue means the whole ceiling, 0 means none. | [optional] 
-**memory** | **str** | A Kubernetes quantity such as 256Gi. Empty means bounded only by the cluster itself. | [optional] 
+**cpu** | **str** | The CPU the queue may use, such as 64. Left out, only the cluster limits it. | [optional] 
+**gpu** | **int** | How many GPUs the queue may use, checked against what the cluster can provision; 0 means none. Left out, the only queue gets them all and a queue among several gets none. | [optional] 
+**memory** | **str** | The memory the queue may use, such as 256Gi. Left out, only the cluster limits it. | [optional] 
 
 ## Example
 

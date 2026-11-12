@@ -5,12 +5,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**dns_solver** | [**CertManagerDNSSolver**](CertManagerDNSSolver.md) | Connects the DNS zone Let&#39;s Encrypt checks ownership in. With it, certificates for applications exposed through the Ingress or the gateway are checked through DNS; without it, Ingress certificates use HTTP-01. Requires a Let&#39;s Encrypt issuer, and Identity except on an EKS cluster AstroPulse created, where both default to its Route 53 zones and its cert-manager role. | [optional] 
-**email** | **str** | The contact address Let&#39;s Encrypt registers the account under and sends expiry notices to. Required when issuerType is LetsEncrypt or LetsEncryptStaging; unused for SelfSigned. | [optional] 
-**enable_cluster_issuer** | **bool** | Creates AstroPulse&#39;s ClusterIssuers. Defaults to true; false installs cert-manager alone, issuing nothing. | [optional] [default to True]
-**identity** | [**AddonWorkloadIdentity**](AddonWorkloadIdentity.md) | Binds cert-manager&#39;s ServiceAccount to a cloud workload identity (IRSA or Pod Identity on EKS, Workload Identity on GKE and AKS). Annotations render onto the ServiceAccount, labels onto the controller pods. Required for DNSSolver, except on an EKS cluster AstroPulse created, where it defaults to that cluster&#39;s cert-manager role. | [optional] 
-**install_crds** | **bool** | Installs cert-manager&#39;s CRDs with the add-on. Defaults to true; set it false only where they are managed separately. | [optional] [default to True]
-**issuer_type** | [**CertManagerIssuerType**](CertManagerIssuerType.md) | Where endpoint certificates come from. Left out, it is LetsEncrypt once &#x60;email&#x60; is set, creating both the production and the staging ClusterIssuer, and no ClusterIssuer is created without an email. | [optional] 
+**dns_solver** | [**CertManagerDNSSolver**](CertManagerDNSSolver.md) | Proves domain ownership to Let&#39;s Encrypt through your DNS zone, for applications behind an Ingress or the gateway; without it, Ingress certificates are proven over HTTP. Needs a Let&#39;s Encrypt issuer, and on an EKS cluster AstroPulse created defaults to the cluster&#39;s Route 53 zones. | [optional] 
+**email** | **str** | The address Let&#39;s Encrypt registers your account under and sends expiry notices to. Required for the Let&#39;s Encrypt issuers. | [optional] 
+**enable_cluster_issuer** | **bool** | Creates AstroPulse&#39;s certificate issuers; turn it off to install cert-manager without issuing anything. | [optional] [default to True]
+**identity** | [**AddonWorkloadIdentity**](AddonWorkloadIdentity.md) | The cloud identity cert-manager runs as to answer ownership checks in your DNS zone. Required with &#x60;dnsSolver&#x60;, except on an EKS cluster AstroPulse created, where it defaults to the role made for it. | [optional] 
+**install_crds** | **bool** | Installs cert-manager&#39;s resource definitions with the add-on; turn it off only if you manage them yourself. | [optional] [default to True]
+**issuer_type** | [**CertManagerIssuerType**](CertManagerIssuerType.md) | Where certificates come from. Left out, it is &#x60;LetsEncrypt&#x60; once &#x60;email&#x60; is set; with no email, no issuer is created. | [optional] 
 
 ## Example
 
