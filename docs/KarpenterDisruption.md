@@ -5,9 +5,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**budgets** | [**List[KarpenterDisruptionBudget]**](KarpenterDisruptionBudget.md) | Limits on how many nodes change at once; when several apply, the smallest wins. Omit them for one budget of 10%. | [optional] 
-**consolidate_after** | **str** | How long a node stays empty or underused before it is removed: 30s (5m on the GPU pool) to 720h, or Never. Shorter saves idle cost; longer keeps the node for the next workload, which then avoids waiting for a new one. | [optional] 
-**consolidation_policy** | [**KarpenterConsolidationPolicy**](KarpenterConsolidationPolicy.md) | Either WhenEmpty (remove only nodes with nothing left running) or WhenEmptyOrUnderutilized (also move workloads onto fewer, cheaper nodes to save cost; pods restart when they are moved). | [optional] 
+**budgets** | [**List[KarpenterDisruptionBudget]**](KarpenterDisruptionBudget.md) | Limits on how many nodes change at once; when several apply, the smallest wins. Left out, it is one budget of 10%. | [optional] 
+**consolidate_after** | **str** | How long a node stays empty or underused before it is removed, from 30s (5m for GPU nodes) to 720h, or &#x60;Never&#x60;. Shorter saves idle cost; longer keeps the node ready for the next workload. | [optional] 
+**consolidation_policy** | [**KarpenterConsolidationPolicy**](KarpenterConsolidationPolicy.md) | Which nodes may be removed: only empty ones, or also underused ones, whose pods restart on fewer, cheaper nodes. | [optional] 
 
 ## Example
 

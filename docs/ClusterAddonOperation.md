@@ -6,6 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **accelerator** | [**ClusterAddonAcceleratorReadiness**](ClusterAddonAcceleratorReadiness.md) | Accompanies an accelerator-metrics apply: what this cluster has for the exporter to measure. See ClusterAddonAcceleratorReadiness. | [optional] 
+**configuration** | [**ClusterAddonConfiguration**](ClusterAddonConfiguration.md) | The settings the apply would run with, every one left out filled in as a read of the add-on shows it; present on a dry run only. | [optional] 
 **message** | **str** | Says what happened, in words to show a person. | [optional] 
 **metadata** | [**ClusterAddonOperationMetadata**](ClusterAddonOperationMetadata.md) | Carries anything the operation wants to say beyond its status. | [optional] 
 **notices** | [**List[Notice]**](Notice.md) | What an apply, or its dry run, tells you about it, including why it started nothing. | [optional] 

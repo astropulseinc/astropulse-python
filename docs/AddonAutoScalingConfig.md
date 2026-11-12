@@ -5,10 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**enabled** | **bool** | Turns horizontal autoscaling on for the add-on&#39;s own workload. | [optional] 
-**max_replicas** | **int** | The replica ceiling. Empty takes the AstroPulse default. | [optional] 
-**min_replicas** | **int** | The replica floor. Empty takes the AstroPulse default. | [optional] 
-**target_cpu_percent** | **int** | The CPU utilisation replicas are scaled to hold. | [optional] 
+**enabled** | **bool** | Turns automatic scaling on. | [optional] 
+**max_replicas** | **int** | The most copies that may run. Left out, AstroPulse&#39;s default applies. | [optional] 
+**min_replicas** | **int** | The fewest copies that keep running. Left out, AstroPulse&#39;s default applies. | [optional] 
+**target_cpu_percent** | **int** | The average CPU use, in percent, that scaling keeps each copy at. | [optional] 
 
 ## Example
 

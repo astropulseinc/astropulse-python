@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**cpu** | **str** | The CPU reserved for the component, in cores: 250m is a quarter of a core, from 10m (0.01 cores) to 16 cores. Left out, an update keeps the current value and a new add-on gets AstroPulse&#39;s sizing. | [optional] 
-**memory** | **str** | The memory reserved for the component, such as 512Mi (512 MiB), from 64Mi (64 MiB) to 64Gi (64 GiB). Left out, an update keeps the current value and a new add-on gets AstroPulse&#39;s sizing. | [optional] 
+**cpu** | **str** | An amount of CPU in cores, from 10m to 16; 250m is a quarter of a core. Left out, an update keeps the current value. | [optional] 
+**memory** | **str** | An amount of memory, such as 512Mi, from 64Mi (or the component&#39;s default where that is lower) to 64Gi (64 GiB). Left out, an update keeps the current value; where AstroPulse sets a memory limit and you set none, a memory request is also the limit. | [optional] 
 
 ## Example
 

@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**retention** | **str** | The local raw-metric recovery window. It accepts whole hours or days from 24h through 7d; empty selects the Astro default of 7d. | [optional] [default to '7d']
-**storage** | [**CostVisibilityPrometheusStorageConfiguration**](CostVisibilityPrometheusStorageConfiguration.md) | Configures the Prometheus data volume. Empty selects an Astro-sized volume on the cluster&#39;s default storage. | [optional] 
+**retention** | **str** | How long raw usage data is kept, in whole hours or days from 24h to 7d. Left out, it is 7d. | [optional] [default to '7d']
+**storage** | [**CostVisibilityPrometheusStorageConfiguration**](CostVisibilityPrometheusStorageConfiguration.md) | The disk the installed Prometheus keeps its data on. Left out, AstroPulse sizes it on the cluster&#39;s default storage. | [optional] 
 
 ## Example
 

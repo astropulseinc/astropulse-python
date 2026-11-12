@@ -5,9 +5,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**auto_scaling** | [**GatewayAutoScalingConfig**](GatewayAutoScalingConfig.md) | Scales the merged Envoy proxy behind the Gateway. Omitted or disabled keeps one fixed replica. | [optional] 
-**enable_node_port** | **bool** | Publishes the gateway on a NodePort instead of a cloud load balancer, for clusters that have none. | [optional] 
-**exposure** | [**EndpointExposure**](EndpointExposure.md) | The default for model endpoints that name none, and the exposure of the shared Gateway: Public (the internet, the default) or Private (only the cluster&#39;s network). | [optional] 
+**auto_scaling** | [**GatewayAutoScalingConfig**](GatewayAutoScalingConfig.md) | Adds and removes gateway proxy copies as load changes. Left out or off, one copy runs. | [optional] 
+**enable_node_port** | **bool** | Serves the gateway on a port of every node instead of a cloud load balancer; turn it on for a cluster that cannot create one. | [optional] 
+**exposure** | [**EndpointExposure**](EndpointExposure.md) | Who can reach the shared gateway, and the default for model endpoints that name none. | [optional] 
 
 ## Example
 

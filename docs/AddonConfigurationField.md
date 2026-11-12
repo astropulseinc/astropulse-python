@@ -5,6 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**advanced** | **bool** | Marks a setting most users leave at its default; clients show it in an advanced section. | [optional] 
 **default** | **str** | The value a new add-on gets when the setting is left out, written as it is in the configuration. In a cluster&#39;s catalog it is the value that cluster uses; empty when there is none. | [optional] 
 **description** | **str** | Says what the setting does, from the field&#39;s own contract. | [optional] 
 **enum** | **List[str]** | The complete set of values the setting accepts, empty for a setting that accepts any value of its type. For an array it is what one element accepts. Published so a client offers the choice instead of a free-text box the API then refuses, and so the list cannot drift from the one validation reads. | [optional] 
@@ -17,6 +18,7 @@ Name | Type | Description | Notes
 **minimum** | **float** | The smallest value a number setting accepts, absent when it has no lower bound. | [optional] 
 **path** | **str** | The setting&#39;s dotted path within the add-on&#39;s configuration. | [optional] 
 **placeholder** | **str** | A hint for an empty field: an example value such as 250m, or false, 0, [] or {} for its type, and empty for text with no example. | [optional] 
+**read_only** | **bool** | Shown for reference; clients don&#39;t offer to change it. | [optional] 
 **required** | **bool** | Marks a setting the add-on refuses a configuration without, wherever the setting applies (visibleWhen). | [optional] 
 **section** | **str** | The heading this field belongs under, empty for a top-level one. It is the parent object&#39;s label, not its path. | [optional] 
 **suggested** | **str** | A value AstroPulse knows would work on this cluster, empty when it knows of none. It is never applied for you. | [optional] 

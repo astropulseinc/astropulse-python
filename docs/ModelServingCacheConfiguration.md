@@ -6,9 +6,9 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **backing** | [**ModelCacheBacking**](ModelCacheBacking.md) | Where the weights are kept; required whenever &#x60;modelCache&#x60; is set. | [optional] 
-**name** | **str** | The cluster storage binding that holds the weights. Required with Storage backing; it cannot be set with Node backing. | [optional] 
-**node_groups** | **List[str]** | The node groups, CPU or GPU, and the GPU node pool, whose nodes hold the weights. A cached model runs on one of them. Leave out the groups that run the cluster&#39;s own components. | [optional] 
-**size** | **str** | How much the cache may use, as a Kubernetes quantity such as 2Ti. Required with Storage backing; it cannot be set with Node backing, where the budget comes from the node&#39;s own disk. | [optional] 
+**name** | **str** | The cluster storage that holds the weights, by its binding name; required with &#x60;Storage&#x60; backing and refused with &#x60;Node&#x60; backing. | [optional] 
+**node_groups** | **List[str]** | The node groups, CPU or GPU, and the GPU node pool, whose nodes keep the weights; a cached model runs on one of them. Leave out the groups that run the cluster&#39;s own components. | [optional] 
+**size** | **str** | How much space the cache may use, such as 2Ti; required with &#x60;Storage&#x60; backing and refused with &#x60;Node&#x60; backing, where the node&#39;s own disk sets it. | [optional] 
 
 ## Example
 

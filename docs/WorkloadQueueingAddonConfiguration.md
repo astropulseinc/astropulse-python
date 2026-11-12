@@ -5,10 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**cluster_queues** | [**List[WorkloadClusterQueue]**](WorkloadClusterQueue.md) | The queues a model application names in &#x60;model.queue.name&#x60;. Empty creates one queue named default whose GPU quota is the cluster&#39;s whole accelerator capacity. | [optional] 
-**gang_scheduling** | [**WorkloadQueueingGangScheduling**](WorkloadQueueingGangScheduling.md) | Makes admission all-or-nothing: every pod of an admitted workload must be ready within the timeout, or the workload is evicted and requeued instead of holding partial capacity. | [optional] 
-**integrations** | [**List[WorkloadQueueingIntegration]**](WorkloadQueueingIntegration.md) | The workload kinds the queues admit. Empty means batch/job only; any other kind needs that kind&#39;s operator installed. | [optional] 
-**local_queues** | [**List[WorkloadLocalQueue]**](WorkloadLocalQueue.md) | Bind namespaces of yours to one of the ClusterQueues. An Application that names a queue gets its own LocalQueue without one here. | [optional] 
+**cluster_queues** | [**List[WorkloadClusterQueue]**](WorkloadClusterQueue.md) | The queues that share the cluster&#39;s capacity; a model application picks one in &#x60;model.queue.name&#x60;. Left out, one queue named &#x60;default&#x60; gets the cluster&#39;s whole GPU capacity. | [optional] 
+**gang_scheduling** | [**WorkloadQueueingGangScheduling**](WorkloadQueueingGangScheduling.md) | Starts a workload only when all its pods can run: if they aren&#39;t all ready within the timeout, it is stopped and queued again. | [optional] 
+**integrations** | [**List[WorkloadQueueingIntegration]**](WorkloadQueueingIntegration.md) | The kinds of workload the queues accept; a kind other than batch/job needs its own controller on the cluster. Left out, only batch/job is accepted. | [optional] 
+**local_queues** | [**List[WorkloadLocalQueue]**](WorkloadLocalQueue.md) | Connects namespaces of yours to a queue. An application that names a queue gets its own connection without one here. | [optional] 
 
 ## Example
 

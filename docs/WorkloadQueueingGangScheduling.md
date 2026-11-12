@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**enabled** | **bool** | Turns gang admission on. | [optional] 
-**timeout** | **str** | How long every pod of an admitted workload has to become ready, as a duration such as 10m. Empty takes the AstroPulse default. | [optional] [default to '10m']
+**enabled** | **bool** | Turns all-or-nothing starts on. | [optional] 
+**timeout** | **str** | How long all pods of a started workload have to become ready, such as 10m. Left out, it is 10m. | [optional] [default to '10m']
 
 ## Example
 

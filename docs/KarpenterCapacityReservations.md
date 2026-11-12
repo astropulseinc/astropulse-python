@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**ids** | **List[str]** | Capacity reservation IDs, for example cr-0123456789abcdef0. You find them in the AWS EC2 console under Capacity Reservations. | [optional] 
-**tags** | **List[str]** | The key&#x3D;value tags a reservation must all carry, for example team&#x3D;ml. Unlike an ID, a tag keeps matching a renewed reservation. | [optional] 
+**ids** | **List[str]** | Capacity reservation IDs, such as cr-0123456789abcdef0, listed in the EC2 console under Capacity Reservations. | [optional] 
+**tags** | **List[str]** | The tags, written key&#x3D;value, that a reservation must all carry; unlike an ID, a tag keeps matching a renewed reservation. | [optional] 
 
 ## Example
 

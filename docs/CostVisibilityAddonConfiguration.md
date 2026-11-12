@@ -5,13 +5,13 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**collection_interval_minutes** | **int** | Tunes how often the metering capability polls for closed windows (windows themselves are fixed hourly). | [optional] [default to 5]
-**metrics_source** | [**CostMetricsSource**](CostMetricsSource.md) | Where cost reporting reads usage. Left out, it is Existing when prometheusEndpoint is set and Managed otherwise; a read returns the one in use. | [optional] 
-**price_sheet** | [**CostPriceSheet**](CostPriceSheet.md) | Supplies custom unit rates and takes precedence over default estimates. Usage without an available rate is reported as unpriced, never as zero cost. | [optional] 
-**pricing** | [**CostPricing**](CostPricing.md) | How usage is priced. Left out, it is PriceSheet when priceSheet is set and Published otherwise; a read returns the one in use. | [optional] 
-**pricing_role_arn** | **str** | An AWS IAM role allowed ec2:DescribeSpotPriceHistory, so Spot nodes are priced at their Spot price on a cluster AstroPulse did not create. A cluster AstroPulse created on EKS has its own. | [optional] 
-**prometheus** | [**CostVisibilityPrometheusConfiguration**](CostVisibilityPrometheusConfiguration.md) | Configures the bundled scoped Prometheus. It is only valid when no endpoint override is set. All low-level operational tuning remains platform-managed. | [optional] 
-**prometheus_endpoint** | **str** | Uses an existing in-cluster Prometheus as the metrics source. It must be reachable from workloads in the target cluster. | [optional] 
+**collection_interval_minutes** | **int** | How often, in minutes, usage is collected, from 1 to 1440; costs are still reported by the hour. | [optional] [default to 5]
+**metrics_source** | [**CostMetricsSource**](CostMetricsSource.md) | Where cost reporting reads usage. Left out, it is &#x60;Existing&#x60; when &#x60;prometheusEndpoint&#x60; is set and &#x60;Managed&#x60; otherwise. | [optional] 
+**price_sheet** | [**CostPriceSheet**](CostPriceSheet.md) | Your own unit prices, used instead of published ones. Usage with no price is reported as unpriced, never as free. | [optional] 
+**pricing** | [**CostPricing**](CostPricing.md) | How usage is priced. Left out, it is &#x60;PriceSheet&#x60; when &#x60;priceSheet&#x60; is set and &#x60;Published&#x60; otherwise. | [optional] 
+**pricing_role_arn** | **str** | An AWS IAM role allowed &#x60;ec2:DescribeSpotPriceHistory&#x60;, so Spot nodes are priced at their Spot price on a cluster AstroPulse didn&#39;t create. | [optional] 
+**prometheus** | [**CostVisibilityPrometheusConfiguration**](CostVisibilityPrometheusConfiguration.md) | Settings for the Prometheus AstroPulse installs and runs; not accepted with &#x60;prometheusEndpoint&#x60;. | [optional] 
+**prometheus_endpoint** | **str** | The address of a Prometheus you already run, reachable from the cluster, to read usage from instead of installing one. | [optional] 
 
 ## Example
 

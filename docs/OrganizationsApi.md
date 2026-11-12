@@ -576,7 +576,7 @@ This endpoint does not need any parameter.
 
 List organizations for the caller
 
-List the organizations the caller belongs to. A service account gets its own organization. Members and the owner's ID are returned only to an admin or owner.
+List the organizations the caller's credentials can act in: every organization the caller belongs to, or only its own for an API key scoped to one organization or a service account. Members and the owner's ID are returned only to an admin or owner.
 
 ### Example
 

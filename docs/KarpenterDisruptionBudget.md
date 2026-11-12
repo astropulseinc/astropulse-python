@@ -5,10 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**duration** | **str** | How long the budget lasts after each schedule start, in hours and minutes such as 8h or 1h30m; set with schedule. | [optional] 
-**nodes** | **str** | The most nodes that may change at once, as a count (2) or a percentage of the pool (10%); 0 stops removals, so idle nodes keep being billed. | [optional] 
-**reasons** | **List[str]** | Limits the budget to these causes: Empty, Underutilized, Drifted (out of date with its settings) or Unhealthy; omit for all. | [optional] 
-**schedule** | **str** | When the budget starts, as a five-field cron expression in UTC or @hourly, @daily, @weekly, @monthly or @yearly; set with duration. | [optional] 
+**duration** | **str** | How long the budget lasts after each start, such as 8h or 1h30m; set it with &#x60;schedule&#x60;. | [optional] 
+**nodes** | **str** | The most nodes that may change at once, as a count such as 2 or a share of the pool such as 10%; 0 stops removals. | [optional] 
+**reasons** | **List[str]** | The causes of removal the budget applies to. Left out, it applies to all of them. | [optional] 
+**schedule** | **str** | When the budget starts, as a five-field cron expression in UTC or a shortcut such as @daily; set it with &#x60;duration&#x60;. | [optional] 
 
 ## Example
 

@@ -5,15 +5,15 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**cloud_access** | [**CloudAccessMode**](CloudAccessMode.md) | How external-dns reaches your DNS provider. Left out, it is Identity when identity is set, Secret when secretRef is set, and None otherwise; a read returns the one in use. | [optional] 
-**domain_filter** | **str** | The DNS zone external-dns may write to, such as example.com, comma-separated for several. Empty means your organization&#39;s verified domains when it runs as the identity AstroPulse created, and is refused if you have none; otherwise, every zone its credentials can reach. | [optional] 
-**dry_run** | **bool** | Logs what external-dns would publish without publishing it. | [optional] 
-**gateway_routes** | **bool** | Also publishes DNS for the hostnames of Gateway API HTTPRoutes, alongside the Ingress hostnames external-dns publishes by default. Requires the Gateway API CRDs on the cluster. | [optional] 
-**identity** | [**AddonWorkloadIdentity**](AddonWorkloadIdentity.md) | Binds external-dns to a cloud workload identity that can change records in your DNS zone. Annotations render onto its ServiceAccount, labels onto its pods. On an EKS cluster AstroPulse created it defaults to that cluster&#39;s external-dns role; on a registered cluster publishing to Route 53, set it or SecretRef. | [optional] 
-**policy** | [**ExternalDNSPolicy**](ExternalDNSPolicy.md) | What external-dns may do to the records it owns: Sync creates, updates and deletes them, and UpsertOnly never deletes them. Left out, an update keeps the current one and a new add-on runs Sync. | [optional] 
-**provider** | [**ExternalDNSProvider**](ExternalDNSProvider.md) | The DNS provider to publish through: &#x60;aws&#x60;, &#x60;gcp&#x60; or &#x60;azure&#x60;. Empty selects the cluster&#39;s own cloud, and is refused on a cluster whose cloud is not known. | [optional] 
-**secret_ref** | **str** | Names a Secret in the external-dns namespace holding DNS provider credentials. Use it only where a workload identity cannot be used, such as a zone in another cloud; it cannot be combined with identity. | [optional] 
-**txt_owner_id** | **str** | Marks the records this cluster owns, so two clusters sharing a zone do not delete each other&#39;s. Empty keeps the value the add-on already uses on this cluster; a first install takes the cluster&#39;s name followed by a suffix unique to the cluster. | [optional] 
+**cloud_access** | [**CloudAccessMode**](CloudAccessMode.md) | How external-dns signs in to your DNS provider. Left out, it is &#x60;Identity&#x60; when &#x60;identity&#x60; is set, &#x60;Secret&#x60; when &#x60;secretRef&#x60; is set, and &#x60;None&#x60; otherwise. | [optional] 
+**domain_filter** | **str** | The DNS zones external-dns may change, such as example.com, separated by commas. Left out, it is your organization&#39;s verified domains when it runs as the identity AstroPulse created (refused if you have none), and otherwise every zone its credentials reach. | [optional] 
+**dry_run** | **bool** | Logs the DNS changes external-dns would make without making them. | [optional] 
+**gateway_routes** | **bool** | Also publishes DNS for the hostnames of Gateway API routes, not only Ingress hostnames; needs the Gateway API on the cluster. | [optional] 
+**identity** | [**AddonWorkloadIdentity**](AddonWorkloadIdentity.md) | The cloud identity external-dns runs as to change records in your DNS zone. On an EKS cluster AstroPulse created it defaults to the role made for it; on a registered cluster using Route 53, set this or &#x60;secretRef&#x60;. | [optional] 
+**policy** | [**ExternalDNSPolicy**](ExternalDNSPolicy.md) | What external-dns may do to the records it owns. Left out, an update keeps the current value and a new add-on uses &#x60;Sync&#x60;. | [optional] 
+**provider** | [**ExternalDNSProvider**](ExternalDNSProvider.md) | The DNS service that holds your zone. Left out, it is the cluster&#39;s own cloud, and refused when that is not known. | [optional] 
+**secret_ref** | **str** | The name of a Secret in the add-on&#39;s namespace holding DNS provider credentials. Use it only where a cloud identity can&#39;t be used, such as a zone in another cloud; it can&#39;t be combined with &#x60;identity&#x60;. | [optional] 
+**txt_owner_id** | **str** | The owner name written on this cluster&#39;s DNS records, so clusters sharing a zone leave each other&#39;s records alone. Left out, it keeps the current value, or on a first install is made from the cluster&#39;s name. | [optional] 
 
 ## Example
 

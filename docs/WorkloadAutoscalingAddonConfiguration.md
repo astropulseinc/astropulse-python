@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**metrics_source** | [**AutoscalingMetricsSource**](AutoscalingMetricsSource.md) | Where a scaler reads a workload&#39;s own runtime metrics. Empty means there is no such source: the add-on is still installed and useful, and a workload that would have scaled on a runtime metric scales on CPU instead rather than failing. | [optional] 
+**metrics_source** | [**AutoscalingMetricsSource**](AutoscalingMetricsSource.md) | Where scaling reads a workload&#39;s own metrics, such as its request rate. Left out, a workload that would scale on such a metric scales on CPU instead. | [optional] 
 
 ## Example
 

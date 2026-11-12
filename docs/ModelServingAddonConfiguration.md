@@ -5,10 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**cloud_access** | [**CloudAccessMode**](CloudAccessMode.md) | How model-serving reaches private model storage. Left out, it is Identity when identity is set, Secret when secretRef is set, and None otherwise; a read returns the one in use. | [optional] 
-**identity** | [**AddonWorkloadIdentity**](AddonWorkloadIdentity.md) | Binds the cluster&#39;s models, and the weight cache&#39;s downloads, to a cloud workload identity so they can read private artifacts. | [optional] 
-**model_cache** | [**ModelServingCacheConfiguration**](ModelServingCacheConfiguration.md) | Keeps model weights on the cluster, so a replica starting where they are held reads them instead of downloading them. Left off, every replica downloads its own weights. | [optional] 
-**secret_ref** | **str** | Names a Secret in the add-on&#39;s namespace that the cluster&#39;s models read private artifacts with. Use it only where a workload identity cannot be used; it cannot be combined with identity. | [optional] 
+**cloud_access** | [**CloudAccessMode**](CloudAccessMode.md) | How models sign in to private model storage. Left out, it is &#x60;Identity&#x60; when &#x60;identity&#x60; is set, &#x60;Secret&#x60; when &#x60;secretRef&#x60; is set, and &#x60;None&#x60; otherwise. | [optional] 
+**identity** | [**AddonWorkloadIdentity**](AddonWorkloadIdentity.md) | The cloud identity models and the weight cache run as to read private model files. | [optional] 
+**model_cache** | [**ModelServingCacheConfiguration**](ModelServingCacheConfiguration.md) | Keeps model weights on the cluster, so a replica starting where they are held reads them instead of downloading them. Left out, every replica downloads its own weights. | [optional] 
+**secret_ref** | **str** | The name of a Secret in the add-on&#39;s namespace that models read private model files with. Use it only where a cloud identity can&#39;t be used; it can&#39;t be combined with &#x60;identity&#x60;. | [optional] 
 
 ## Example
 

@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** | The cluster storage this volume uses, by the name bound on the cluster. Empty uses the cluster&#39;s default storage; once installed, the storage is immutable. | [optional] 
-**size** | **str** | A Kubernetes storage quantity from 1Gi through 2Ti. Empty selects the Astro default. | [optional] [default to '20Gi']
+**name** | **str** | The cluster storage the disk uses, by the name bound on the cluster; it can&#39;t be changed after install. Left out, it is the cluster&#39;s default storage. | [optional] 
+**size** | **str** | The disk size, from 1Gi to 2Ti. Left out, it is 20Gi. | [optional] [default to '20Gi']
 
 ## Example
 
