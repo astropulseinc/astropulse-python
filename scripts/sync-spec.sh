@@ -6,7 +6,7 @@
 # Usage: sync-spec.sh <url> <out>
 #
 # It prints a one-line decision and, under GitHub Actions, writes `status`
-# (absent|unchanged|changed) and `version` to $GITHUB_OUTPUT, so the workflow
+# (unchanged|changed) and `version` to $GITHUB_OUTPUT, so the workflow
 # regenerates only when the document actually moved.
 set -euo pipefail
 
@@ -22,12 +22,11 @@ emit() { # key=value -> $GITHUB_OUTPUT when running under Actions
 tmp="$(mktemp)"
 trap 'rm -f "$tmp"' EXIT
 
-# Until the release serves the document the route is absent; that is the
-# expected state before launch, not a failure, so the run ends green.
-if ! curl -fsSL "$url" -o "$tmp" 2>/dev/null; then
-	echo "no published document yet"
-	emit "status=absent"
-	exit 0
+# A failed fetch (unreachable, timed out, or an error status after retries)
+# fails the run: a green run must mean the SDK matches the published document.
+if ! curl -fsSL --max-time 60 --retry 2 --retry-connrefused "$url" -o "$tmp"; then
+	echo "could not fetch the API document from $url" >&2
+	exit 1
 fi
 
 # Parse the fetched bytes once: confirm it is an OpenAPI document and read its
