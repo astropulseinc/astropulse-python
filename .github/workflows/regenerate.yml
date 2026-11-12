@@ -10,7 +10,9 @@ on:
   workflow_dispatch:
   schedule:
     # Hourly: a release should not leave the SDK describing the previous API for
-    # long. A run where the version has not moved exits in seconds.
+    # long. A run where the version matches the default branch exits in seconds;
+    # while the regeneration PR is open, each run regenerates it again and
+    # pushes nothing when nothing changed.
     - cron: "0 * * * *"
 
 # Only the built-in token, with the least it needs to push the branch and open
@@ -18,6 +20,11 @@ on:
 permissions:
   contents: write
   pull-requests: write
+
+# Runs never overlap: two would push the same branch.
+concurrency:
+  group: regenerate
+  cancel-in-progress: false
 
 jobs:
   regenerate:
@@ -30,8 +37,8 @@ jobs:
       - run: pip install pyyaml
 
       # Compares the served version with the committed spec and writes the spec
-      # only when it changed. `absent` (route not served yet) and `unchanged`
-      # both end the run green without a PR.
+      # only when it changed. `unchanged` ends the run green without a PR; a
+      # failed fetch or a response that is not the document fails it.
       - name: Fetch and compare the API document
         id: sync
         run: make sync
