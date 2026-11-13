@@ -331,6 +331,8 @@
 
 * `AddonReleaseUnavailable` (value: `'AddonReleaseUnavailable'`)
 
+* `AddonReleaseNotOffered` (value: `'AddonReleaseNotOffered'`)
+
 * `AddonQueueNamespacesStale` (value: `'AddonQueueNamespacesStale'`)
 
 * `ApplicationDeployFailed` (value: `'ApplicationDeployFailed'`)
@@ -352,6 +354,8 @@
 * `ClientOutdated` (value: `'ClientOutdated'`)
 
 * `NotificationChannelNotInPlan` (value: `'NotificationChannelNotInPlan'`)
+
+* `FeatureNotInPlan` (value: `'FeatureNotInPlan'`)
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
