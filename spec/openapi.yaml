@@ -16285,6 +16285,7 @@ components:
       - AddonUnhealthy
       - AddonRollbackUnfinished
       - AddonReleaseUnavailable
+      - AddonReleaseNotOffered
       - AddonQueueNamespacesStale
       - ApplicationDeployFailed
       - ApplicationUpdateNotApplied
@@ -16296,6 +16297,7 @@ components:
       - ApplicationDeleteFailed
       - ClientOutdated
       - NotificationChannelNotInPlan
+      - FeatureNotInPlan
       type: string
       x-enum-descriptions:
       - The application's name is taken under the domain, so the application is served
@@ -16526,6 +16528,8 @@ components:
       - The add-on's last rollback did not finish.
       - The add-on release asked for or recorded is not available; update the add-on
         to its recommended release.
+      - The add-on keeps running on a release no longer offered, but it can't be resynced
+        or rolled back until it is updated to its recommended release.
       - The workload-queueing add-on gives a queue to a namespace no queued application
         uses.
       - The application did not reach a running state.
@@ -16544,6 +16548,7 @@ components:
       - The request was sent by a CLI too old to be understood; installing the latest
         one resolves it.
       - The organization's plan does not include the notification channel.
+      - The organization's plan does not include this feature.
       x-enum-labels:
       - Hostname already taken
       - Scaling signal may not be collected
@@ -16709,6 +16714,7 @@ components:
       - The add-on isn't healthy
       - The last rollback did not finish
       - This add-on release isn't available
+      - Update this add-on
       - The add-on gives a queue to namespaces nothing uses
       - Deployment failed
       - The last update was not applied
@@ -16720,6 +16726,7 @@ components:
       - Deleting the application failed
       - This CLI is too old
       - Not included in your plan
+      - Not available on your plan
       x-enum-varnames:
       - HostnameTaken
       - ScalingUnconfirmed
@@ -16885,6 +16892,7 @@ components:
       - AddonUnhealthy
       - AddonRollbackUnfinished
       - AddonReleaseUnavailable
+      - AddonReleaseNotOffered
       - AddonQueueNamespacesStale
       - ApplicationDeployFailed
       - ApplicationUpdateNotApplied
@@ -16896,6 +16904,7 @@ components:
       - ApplicationDeleteFailed
       - ClientOutdated
       - NotificationChannelNotInPlan
+      - FeatureNotInPlan
     NoticeOperation:
       enum:
       - addOrganizationMember
@@ -23276,7 +23285,7 @@ info:
     tools, and authorized automation.'
   termsOfService: https://astropulse.io/terms
   title: AstroPulse Platform API
-  version: v1.0.1
+  version: v1.0.4
   x-scalar-sdk-installation:
   - description: '```sh
 
