@@ -9,11 +9,9 @@ name: Regenerate from the API document
 on:
   workflow_dispatch:
   schedule:
-    # Hourly: a release should not leave the SDK describing the previous API for
-    # long. A run where the version matches the default branch exits in seconds;
-    # while the regeneration PR is open, each run regenerates it again and
-    # pushes nothing when nothing changed.
-    - cron: "0 * * * *"
+    # Each platform release starts this workflow. The weekly run is a backup for
+    # a missed start; when the version has not moved it exits in seconds.
+    - cron: "0 6 * * 1"
 
 # Only the built-in token, with the least it needs to push the branch and open
 # or update the PR.
