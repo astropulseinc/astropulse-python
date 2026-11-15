@@ -184,6 +184,7 @@ class NoticeCode(str, Enum):
     AddonUnhealthy = 'AddonUnhealthy'
     AddonRollbackUnfinished = 'AddonRollbackUnfinished'
     AddonReleaseUnavailable = 'AddonReleaseUnavailable'
+    AddonReleaseNotOffered = 'AddonReleaseNotOffered'
     AddonQueueNamespacesStale = 'AddonQueueNamespacesStale'
     ApplicationDeployFailed = 'ApplicationDeployFailed'
     ApplicationUpdateNotApplied = 'ApplicationUpdateNotApplied'
@@ -195,6 +196,7 @@ class NoticeCode(str, Enum):
     ApplicationDeleteFailed = 'ApplicationDeleteFailed'
     ClientOutdated = 'ClientOutdated'
     NotificationChannelNotInPlan = 'NotificationChannelNotInPlan'
+    FeatureNotInPlan = 'FeatureNotInPlan'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
