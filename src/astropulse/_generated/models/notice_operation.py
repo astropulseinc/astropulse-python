@@ -116,6 +116,7 @@ class NoticeOperation(str, Enum):
     GetOpenApiDocument = 'getOpenApiDocument'
     GetOrganization = 'getOrganization'
     GetOrganizationPlan = 'getOrganizationPlan'
+    GetOrganizationUsage = 'getOrganizationUsage'
     GetPricing = 'getPricing'
     GetSelfHostedAwsTemplate = 'getSelfHostedAwsTemplate'
     GetSelfHostedCloudConnection = 'getSelfHostedCloudConnection'

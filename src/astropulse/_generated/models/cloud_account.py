@@ -31,7 +31,7 @@ class CloudAccount(BaseModel):
     clusters: Optional[List[CloudAccountCluster]] = Field(default=None, description="The organization's clusters in the account.")
     connected_at: Optional[StrictStr] = Field(default=None, description="When a connection to the account first finished its setup.", alias="connectedAt")
     disconnect_blocked_reason: Optional[StrictStr] = Field(default=None, description="Says why the account cannot be disconnected; empty when it can.", alias="disconnectBlockedReason")
-    pending_connections: Optional[List[CloudAccountPendingConnection]] = Field(default=None, description="Connections to the account made for clusters that do not exist yet.", alias="pendingConnections")
+    pending_connections: Optional[List[CloudAccountPendingConnection]] = Field(default=None, description="Connections to the account whose clusters are not in AstroPulse.", alias="pendingConnections")
     provider: Optional[Provider] = Field(default=None, description="The cloud the account is in.")
     regions: Optional[List[StrictStr]] = Field(default=None, description="The regions the account's connections and clusters are in; omitted for callers who are not organization admins.")
     resource_group: Optional[StrictStr] = Field(default=None, description="The Azure resource group the account's connections were made for; omitted for callers who are not organization admins.", alias="resourceGroup")

@@ -5753,7 +5753,7 @@ class CloudAccountsApi:
     ) -> CloudAccountListResponse:
         """List the organization's cloud accounts
 
-        One entry per cloud account (and Azure resource group) the organization connected or runs clusters in, with its state, the clusters in it and the connections made for clusters that do not exist yet. Connections not checked in the last five minutes are checked again when the list is read; verifiedAt is when a check last got an answer from the account.
+        One entry per cloud account (and Azure resource group) the organization connected or runs clusters in, with its state, the clusters in it and the connections whose clusters are not in AstroPulse. Connections not checked in the last five minutes are checked again when the list is read; verifiedAt is when a check last got an answer from the account.
 
         :param include_failed: Also count failed or unfinished setups older than three days
         :type include_failed: bool
@@ -5826,7 +5826,7 @@ class CloudAccountsApi:
     ) -> ApiResponse[CloudAccountListResponse]:
         """List the organization's cloud accounts
 
-        One entry per cloud account (and Azure resource group) the organization connected or runs clusters in, with its state, the clusters in it and the connections made for clusters that do not exist yet. Connections not checked in the last five minutes are checked again when the list is read; verifiedAt is when a check last got an answer from the account.
+        One entry per cloud account (and Azure resource group) the organization connected or runs clusters in, with its state, the clusters in it and the connections whose clusters are not in AstroPulse. Connections not checked in the last five minutes are checked again when the list is read; verifiedAt is when a check last got an answer from the account.
 
         :param include_failed: Also count failed or unfinished setups older than three days
         :type include_failed: bool
@@ -5899,7 +5899,7 @@ class CloudAccountsApi:
     ) -> RESTResponseType:
         """List the organization's cloud accounts
 
-        One entry per cloud account (and Azure resource group) the organization connected or runs clusters in, with its state, the clusters in it and the connections made for clusters that do not exist yet. Connections not checked in the last five minutes are checked again when the list is read; verifiedAt is when a check last got an answer from the account.
+        One entry per cloud account (and Azure resource group) the organization connected or runs clusters in, with its state, the clusters in it and the connections whose clusters are not in AstroPulse. Connections not checked in the last five minutes are checked again when the list is read; verifiedAt is when a check last got an answer from the account.
 
         :param include_failed: Also count failed or unfinished setups older than three days
         :type include_failed: bool

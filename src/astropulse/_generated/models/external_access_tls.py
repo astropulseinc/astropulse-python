@@ -22,7 +22,7 @@ class ExternalAccessTLS(BaseModel):
     """
     ExternalAccessTLS
     """ # noqa: E501
-    mode: Optional[TLSMode] = Field(default=None, description="Certificate (a certificate issued for the endpoint's hostname), Wildcard (the nginx-ingress add-on's wildcard certificate) or Passthrough (the application serves TLS itself on its port).")
+    mode: Optional[TLSMode] = Field(default=None, description="Certificate (a certificate issued for the endpoint's hostname), Wildcard (the Ingress add-on's wildcard certificate) or Passthrough (the application serves TLS itself on its port).")
     __properties: ClassVar[List[str]] = ["mode"]
 
     model_config = ConfigDict(

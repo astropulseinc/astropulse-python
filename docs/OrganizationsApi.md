@@ -8,6 +8,7 @@ Method | HTTP request | Description
 [**create_organization**](OrganizationsApi.md#create_organization) | **POST** /api/v1/organizations | Create an organization
 [**get_organization**](OrganizationsApi.md#get_organization) | **GET** /api/v1/organizations/{id} | Get organization by ID
 [**get_organization_plan**](OrganizationsApi.md#get_organization_plan) | **GET** /api/v1/organizations/plans | Get organization plan
+[**get_organization_usage**](OrganizationsApi.md#get_organization_usage) | **GET** /api/v1/organizations/{orgId}/usage | Read the organization&#39;s plan limits and usage
 [**list_organization_members**](OrganizationsApi.md#list_organization_members) | **GET** /api/v1/organizations/{id}/members | Get organization members
 [**list_organization_roles**](OrganizationsApi.md#list_organization_roles) | **GET** /api/v1/organizations/roles | Get organization roles
 [**list_organizations**](OrganizationsApi.md#list_organizations) | **GET** /api/v1/organizations | List organizations for the caller
@@ -379,6 +380,95 @@ Name | Type | Description  | Notes
 **401** | Missing or invalid API key |  -  |
 **403** | User does not have permission to view organization plan |  -  |
 **404** | Organization not found |  -  |
+**429** | Rate limit exceeded |  -  |
+**500** | Internal server error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **get_organization_usage**
+> PlanUsageResponse get_organization_usage(org_id)
+
+Read the organization's plan limits and usage
+
+The organization's plan and, for each resource the plan limits by number, how many it uses, how many the plan allows and the plan that allows more. These are the figures a PlanLimitReached refusal reports, readable before any request. A resource the plan does not limit is left out.
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+* Bearer (JWT) Authentication (BearerAuth):
+
+```python
+import astropulse._generated
+from astropulse._generated.models.plan_usage_response import PlanUsageResponse
+from astropulse._generated.rest import ApiException
+from pprint import pprint
+
+# Defining the host is optional and defaults to https://api.astropulse.io
+# See configuration.py for a list of all supported configuration parameters.
+configuration = astropulse._generated.Configuration(
+    host = "https://api.astropulse.io"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization (JWT): BearerAuth
+configuration = astropulse._generated.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
+
+# Enter a context with an instance of the API client
+with astropulse._generated.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = astropulse._generated.OrganizationsApi(api_client)
+    org_id = 'org_id_example' # str | Organization ID
+
+    try:
+        # Read the organization's plan limits and usage
+        api_response = api_instance.get_organization_usage(org_id)
+        print("The response of OrganizationsApi->get_organization_usage:\n")
+        pprint(api_response)
+    except Exception as e:
+        print("Exception when calling OrganizationsApi->get_organization_usage: %s\n" % e)
+```
+
+
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **org_id** | **str**| Organization ID | 
+
+### Return type
+
+[**PlanUsageResponse**](PlanUsageResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The plan and its limits with usage |  -  |
+**401** | Unauthorized |  -  |
+**403** | Not a member of the organization |  -  |
 **429** | Rate limit exceeded |  -  |
 **500** | Internal server error |  -  |
 

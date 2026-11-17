@@ -1827,7 +1827,7 @@ Name | Type | Description  | Notes
 List the organization's cloud accounts
 
 One entry per cloud account (and Azure resource group) the organization connected or runs clusters in, with its state, the
-clusters in it and the connections made for clusters that do not exist yet. Connections not checked in the last five minutes are checked again when the list is read; verifiedAt is when a check last got an answer from the account.
+clusters in it and the connections whose clusters are not in AstroPulse. Connections not checked in the last five minutes are checked again when the list is read; verifiedAt is when a check last got an answer from the account.
 
 ### Example
 

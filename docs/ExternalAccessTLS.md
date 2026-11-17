@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**mode** | [**TLSMode**](TLSMode.md) | Certificate (a certificate issued for the endpoint&#39;s hostname), Wildcard (the nginx-ingress add-on&#39;s wildcard certificate) or Passthrough (the application serves TLS itself on its port). | [optional] 
+**mode** | [**TLSMode**](TLSMode.md) | Certificate (a certificate issued for the endpoint&#39;s hostname), Wildcard (the Ingress add-on&#39;s wildcard certificate) or Passthrough (the application serves TLS itself on its port). | [optional] 
 
 ## Example
 

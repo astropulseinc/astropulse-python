@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **cluster_name** | **str** | The cluster the connection was made for. | [optional] 
 **connection_id** | **str** | The ID the connect endpoint returned; omitted for callers who are not organization admins. | [optional] 
 **last_error** | **str** | Why the latest setup did not finish; omitted for callers who are not organization admins. | [optional] 
-**message** | **str** | Says in one sentence how the connection stands and that its cluster does not exist yet. | [optional] 
+**message** | **str** | Says in one sentence how the connection stands and that no cluster with its name is in AstroPulse. | [optional] 
 **provisioner** | [**ProvisionerType**](ProvisionerType.md) | The kind of cluster the connection was made for; omitted when unknown. | [optional] 
 **provisioner_name** | **str** | The provisioner&#39;s name for people, such as Amazon EKS; omitted when unknown. | [optional] 
 **started_at** | **str** | When the connection&#39;s latest setup started. | [optional] 

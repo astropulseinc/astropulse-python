@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **placement** | [**ModelPlacement**](ModelPlacement.md) | Says where a model&#39;s GPU replicas would run when a GPU node pool launches their nodes; absent otherwise. | [optional] 
 **runtime** | [**ModelRuntimeChoice**](ModelRuntimeChoice.md) | The serving runtime a model would run on and the format it is served as; absent for an application that is not a model or a format no supported runtime serves. | [optional] 
 **scaling** | [**ModelScalingRule**](ModelScalingRule.md) | How a model&#39;s replicas would scale; absent for other source types. | [optional] 
+**target_namespace** | **str** | The namespace on the cluster the application would run in. | [optional] 
 **title** | **str** | The verdict as a headline to show. | [optional] 
 **unfinished_checks** | **List[str]** | Names the checks that did not finish, so they neither passed nor failed. | [optional] 
 **verdict** | [**DryRunVerdict**](DryRunVerdict.md) | How the dry run ended: Passed, Failed, or Unfinished when some checks did not finish and none failed. | [optional] 

@@ -57,7 +57,7 @@ Name | Type | Description | Notes
 **upgrade_status** | [**AttemptStatusInfo**](AttemptStatusInfo.md) | The status of the last/current upgrade attempt. | [optional] 
 **version_support** | [**ClusterVersionSupport**](ClusterVersionSupport.md) | Reports whether AstroPulse can still manage this cluster at its current Kubernetes version. Present on a single-cluster read. | [optional] 
 **worker_nodes** | [**List[NodeGroup]**](NodeGroup.md) | Represents the worker node configurations. Each node group includes the availability zones where it is deployed. | [optional] 
-**workload_identity** | [**WorkloadIdentityStatus**](WorkloadIdentityStatus.md) | Whether workloads on this cluster can sign in to its cloud as an identity of their own. Omitted for registered clusters and other cases where it isn&#39;t known. | [optional] 
+**workload_identity** | [**WorkloadIdentityStatus**](WorkloadIdentityStatus.md) | Whether workloads on this cluster can sign in to its cloud as an identity of their own. UserManaged on a registered cluster; omitted where it isn&#39;t known. | [optional] 
 
 ## Example
 

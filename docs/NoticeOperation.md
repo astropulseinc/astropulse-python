@@ -195,6 +195,8 @@
 
 * `GetOrganizationPlan` (value: `'getOrganizationPlan'`)
 
+* `GetOrganizationUsage` (value: `'getOrganizationUsage'`)
+
 * `GetPricing` (value: `'getPricing'`)
 
 * `GetSelfHostedAwsTemplate` (value: `'getSelfHostedAwsTemplate'`)

@@ -197,6 +197,7 @@ class NoticeCode(str, Enum):
     ClientOutdated = 'ClientOutdated'
     NotificationChannelNotInPlan = 'NotificationChannelNotInPlan'
     FeatureNotInPlan = 'FeatureNotInPlan'
+    PlanLimitReached = 'PlanLimitReached'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
