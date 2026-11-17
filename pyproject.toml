@@ -4,18 +4,20 @@ dynamic = ["version"]
 description = "The official Python SDK for the AstroPulse Platform API"
 readme = "README.md"
 requires-python = ">=3.10"
-license = { file = "LICENSE" }
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 authors = [{ name = "AstroPulse", email = "contact@astropulse.io" }]
 keywords = ["astropulse", "kubernetes", "inference", "model serving", "sdk"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Typing :: Typed",
 ]
 dependencies = [
@@ -32,7 +34,7 @@ examples = ["requests>=2.31"]
 
 [project.urls]
 Homepage = "https://astropulse.io"
-Documentation = "https://astropulse.io/docs"
+Documentation = "https://astropulse.io/docs/latest/platform/python-sdk"
 Source = "https://github.com/astropulseinc/astropulse-python"
 Issues = "https://github.com/astropulseinc/astropulse-python/issues"
 Changelog = "https://github.com/astropulseinc/astropulse-python/blob/main/CHANGELOG.md"
@@ -41,11 +43,11 @@ Changelog = "https://github.com/astropulseinc/astropulse-python/blob/main/CHANGE
 dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.11", "pydantic>=2"]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
-# One source of truth for the version: the tag check at release reads this file,
-# and so does the package.
+# One source of truth for the version: generation sets it from the API version,
+# and the tag and release workflows read it from here.
 [tool.hatch.version]
 path = "src/astropulse/_version.py"
 

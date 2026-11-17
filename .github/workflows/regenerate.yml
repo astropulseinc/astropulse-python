@@ -9,12 +9,14 @@ name: Regenerate from the API document
 on:
   workflow_dispatch:
   schedule:
-    # Each platform release starts this workflow. The weekly run is a backup for
-    # a missed start; when the version has not moved it exits in seconds.
+    # Run it on dispatch after an API release. The weekly run is a backup; when
+    # the version has not moved it exits in seconds.
     - cron: "0 6 * * 1"
 
-# Only the built-in token, with the least it needs to push the branch and open
-# or update the PR.
+# The built-in token, with the least it needs to push the branch and open or
+# update the PR. When the release app is configured its token is used instead,
+# so the PR's checks start on their own (a PR opened with the built-in token
+# does not start them).
 permissions:
   contents: write
   pull-requests: write
@@ -28,8 +30,11 @@ jobs:
   regenerate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          # The release tags, so a version older than a release is refused here.
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
         with:
           python-version: "3.12"
       - run: pip install pyyaml
@@ -41,25 +46,51 @@ jobs:
         id: sync
         run: make sync
 
+      # Generation also sets the package version to the API version (v1.0.5
+      # gives 1.0.5) and adds its CHANGELOG entry; merging the PR releases it.
       - name: Regenerate and check
+        id: generate
         if: steps.sync.outputs.status == 'changed'
         run: |
           make generate
           make check
+          version="$(python3 scripts/release_version.py current)"
+          mapfile -t tags < <(git tag --list 'v*')
+          python3 scripts/release_version.py tag "v${version}" "${tags[@]}"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+
+      - name: The release app is configured
+        id: has-app
+        if: steps.sync.outputs.status == 'changed'
+        env:
+          HAS_APP: ${{ secrets.ASTROPULSE_CI_CLIENT_ID != '' && secrets.ASTROPULSE_CI_PRIVATE_KEY != '' }}
+        run: echo "configured=${HAS_APP}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510  # v3.3.0
+        id: app
+        if: steps.has-app.outputs.configured == 'true'
+        with:
+          client-id: ${{ secrets.ASTROPULSE_CI_CLIENT_ID }}
+          private-key: ${{ secrets.ASTROPULSE_CI_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
 
       - name: Open or update the single regeneration PR
         if: steps.sync.outputs.status == 'changed'
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c  # v6.1.0
         with:
+          token: ${{ steps.app.outputs.token || github.token }}
           # One open regeneration PR: reuse this branch so each run updates it
           # rather than opening a new PR.
           branch: sdk/release-regenerate
           delete-branch: false
-          title: "Regenerate from API ${{ steps.sync.outputs.version }}"
-          commit-message: "Regenerate from API ${{ steps.sync.outputs.version }}"
+          title: "Sync platform ${{ steps.sync.outputs.version }}"
+          commit-message: "Sync platform ${{ steps.sync.outputs.version }}"
           body: |
             The published OpenAPI document changed (version ${{ steps.sync.outputs.version }}).
-            This PR carries the new document and everything generated from it.
+            This PR carries the new document, everything generated from it, and the
+            package version ${{ steps.generate.outputs.version }}. Merging it tags
+            v${{ steps.generate.outputs.version }} and publishes that version to PyPI.
 
             Review the diff as a contract change: a renamed method or a removed
             field is a breaking change for everyone using this package.

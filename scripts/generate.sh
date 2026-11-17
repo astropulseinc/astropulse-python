@@ -87,8 +87,7 @@ lines += ["]", ""]
 print(f"re-exported {len(imports)} types from astropulse.models")
 
 # The document's own version -- the platform build it was generated from. The
-# package's version is its own (a client fix ships without an API change), so
-# this is recorded rather than copied into it.
+# package version is derived from it below.
 api_version = read_api_version((root / "spec/openapi.yaml").read_text())
 (root / "src/astropulse/_api_version.py").write_text(
     '"""The API document this package was generated from. Written by '
@@ -96,4 +95,8 @@ api_version = read_api_version((root / "spec/openapi.yaml").read_text())
 )
 print(f"generated from API document {api_version}")
 PYTHON
+# The package version follows the API version (v1.0.5 -> 1.0.5), keeping a
+# .postN fix release while the API version is unchanged.
+python3 "${ROOT}/scripts/release_version.py" sync
+
 echo "generated $(ls "${ROOT}/src/astropulse/_generated/api" | grep -c '_api.py') resource classes, $(ls "${ROOT}/src/astropulse/_generated/models" | wc -l | tr -d ' ') models, $(ls "${ROOT}/docs" | wc -l | tr -d ' ') reference pages"

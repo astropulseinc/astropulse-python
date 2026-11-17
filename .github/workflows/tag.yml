@@ -1,0 +1,74 @@
+name: Tag release
+
+# When a change to the package version merges to main, tag it v<version>; the
+# tag starts the release workflow. A merge that leaves the version alone does
+# nothing, and a version that is already tagged is skipped.
+#
+# The tag is created with a GitHub App token: a tag created with the built-in
+# token does not start other workflows, and release tags cannot be moved or
+# deleted once created. Without the app configured the run fails, and can be
+# re-run once it is.
+on:
+  push:
+    branches: [main]
+    paths: [src/astropulse/_version.py]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tag-release
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Read the version and decide
+        id: version
+        run: |
+          set -euo pipefail
+          version="$(python3 scripts/release_version.py current)"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          if git rev-parse -q --verify "refs/tags/v${version}" >/dev/null; then
+            echo "v${version} already exists; nothing to release."
+            echo "tagged=true" >> "$GITHUB_OUTPUT"
+          else
+            mapfile -t tags < <(git tag --list 'v*')
+            python3 scripts/release_version.py tag "v${version}" "${tags[@]}"
+          fi
+
+      - name: The release app is configured
+        if: steps.version.outputs.tagged != 'true'
+        env:
+          HAS_APP: ${{ secrets.ASTROPULSE_CI_CLIENT_ID != '' && secrets.ASTROPULSE_CI_PRIVATE_KEY != '' }}
+        run: |
+          if [ "${HAS_APP}" != "true" ]; then
+            echo "::error::Set ASTROPULSE_CI_CLIENT_ID and ASTROPULSE_CI_PRIVATE_KEY to tag releases, then re-run this workflow."
+            exit 1
+          fi
+
+      - uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510  # v3.3.0
+        if: steps.version.outputs.tagged != 'true'
+        id: app
+        with:
+          client-id: ${{ secrets.ASTROPULSE_CI_CLIENT_ID }}
+          private-key: ${{ secrets.ASTROPULSE_CI_PRIVATE_KEY }}
+          permission-contents: write
+
+      - name: Tag v${{ steps.version.outputs.version }}
+        if: steps.version.outputs.tagged != 'true'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/git/refs" \
+            -f ref="refs/tags/v${VERSION}" -f sha="${GITHUB_SHA}" >/dev/null
+          echo "Tagged v${VERSION} at ${GITHUB_SHA}; the release workflow publishes it."
