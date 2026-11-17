@@ -22,7 +22,9 @@ CHANGELOG = ROOT / "CHANGELOG.md"
 SPEC = ROOT / "spec" / "openapi.yaml"
 
 API_VERSION = re.compile(r"v?(\d+)\.(\d+)\.(\d+)")
-PACKAGE_VERSION = re.compile(r"(\d+)\.(\d+)\.(\d+)(?:\.post(\d+))?")
+# Canonical PEP 440 only (no leading zeros), so the tag and the PyPI version agree.
+N = r"(0|[1-9]\d*)"
+PACKAGE_VERSION = re.compile(rf"{N}\.{N}\.{N}(?:\.post{N})?")
 
 
 def parse(version: str) -> tuple[int, int, int, int]:
@@ -39,7 +41,7 @@ def base_of_api(api_version: str) -> str:
     match = API_VERSION.fullmatch(api_version)
     if not match:
         raise SystemExit(f"API version {api_version!r} is not v1.2.3; refusing to derive a version")
-    return ".".join(match.groups())
+    return ".".join(str(int(part)) for part in match.groups())
 
 
 def package_version(api_version: str, current: str) -> str:

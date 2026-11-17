@@ -32,9 +32,6 @@ tests and examples. Everything else, `models.py` included, is written by `script
    weekly run backs this up, so a missed release shows up as a PR rather than as an SDK that
    quietly describes last month's API.
 
-Maintainers working on an API change that has not shipped yet can regenerate from a platform
-checkout instead of the published document: `make sdk-python` there does the round trip.
-
 ## Versions and releases
 
 The package version is the API version it was generated from: API v1.0.5 gives 1.0.5.
@@ -48,4 +45,6 @@ Releases need no manual step. When a PR that changes `__version__` merges to mai
 workflow tags `v<version>`, and the release workflow checks that tag, runs `make check`, builds,
 publishes to PyPI through Trusted Publishing (no token is stored here, and PyPI records an
 attestation of the build), and creates the GitHub release. A merge that does not change the
-version releases nothing.
+version releases nothing. The tag is created with a GitHub App token (repository secrets
+`RELEASE_APP_CLIENT_ID` and `RELEASE_APP_PRIVATE_KEY`), because a tag created with the built-in
+token does not start the release workflow.

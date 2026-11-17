@@ -29,6 +29,7 @@ def test_a_new_api_version_becomes_the_package_version() -> None:
     assert package_version("v1.0.6", "1.0.5") == "1.0.6"
     assert package_version("v1.0.6", "1.0.5.post2") == "1.0.6"
     assert package_version("1.1.0", "1.0.5") == "1.1.0"
+    assert package_version("v01.0.5", "0") == "1.0.5"
 
 
 def test_a_fix_release_survives_regeneration_for_the_same_api() -> None:
@@ -42,7 +43,9 @@ def test_an_unexpected_api_version_is_refused(api_version: str) -> None:
         package_version(api_version, "1.0.5")
 
 
-@pytest.mark.parametrize("version", ["1.0.5.dev1", "1.0.5rc1", "v1.0.5", "1.0.5.post"])
+@pytest.mark.parametrize(
+    "version", ["1.0.5.dev1", "1.0.5rc1", "v1.0.5", "1.0.5.post", "01.0.5", "1.0.5.post01"]
+)
 def test_only_release_versions_parse(version: str) -> None:
     with pytest.raises(SystemExit):
         parse(version)
