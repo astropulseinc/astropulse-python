@@ -1,5 +1,14 @@
 # Contributing
 
+Bug reports and pull requests are welcome. Please open an issue first for anything larger than a
+small fix, so we can agree on the approach. Security problems go to the address in
+[SECURITY.md](SECURITY.md), not to a public issue.
+
+Pull requests change the hand-written layer, the tests, the examples or the docs. The generated
+code changes only through regeneration (see below); a pull request that edits it by hand is
+closed with a pointer to the API change that would produce it. By contributing, you agree that
+your contribution is licensed under the [Apache License 2.0](LICENSE).
+
 ## Setup
 
 ```bash
@@ -25,9 +34,8 @@ tests and examples. Everything else, `models.py` included, is written by `script
 
 ## An API change reaches this repository like this
 
-1. The API changes, and its own CI refuses the change if it would break existing callers.
-2. The new document is published at <https://api.astropulse.io/api/v1/openapi>.
-3. The regeneration workflow runs `make sync generate check` and opens a PR titled
+1. Each platform release publishes its API document at <https://api.astropulse.io/api/v1/openapi>.
+2. The regeneration workflow runs `make sync generate check` and opens a PR titled
    "Sync platform <version>". Review it as a contract change: the diff is the API's diff. A
    weekly run backs this up, so a missed release shows up as a PR rather than as an SDK that
    quietly describes last month's API.
@@ -45,6 +53,6 @@ Releases need no manual step. When a PR that changes `__version__` merges to mai
 workflow tags `v<version>`, and the release workflow checks that tag, runs `make check`, builds,
 publishes to PyPI through Trusted Publishing (no token is stored here, and PyPI records an
 attestation of the build), and creates the GitHub release. A merge that does not change the
-version releases nothing. The tag is created with a GitHub App token (repository secrets
+version releases nothing. The tag is created with a GitHub App token (organization secrets
 `ASTROPULSE_CI_CLIENT_ID` and `ASTROPULSE_CI_PRIVATE_KEY`), because a tag created with the built-in
 token does not start the release workflow.
