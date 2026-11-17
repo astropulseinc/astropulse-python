@@ -26,7 +26,7 @@ class CloudAccountPendingConnection(BaseModel):
     cluster_name: Optional[StrictStr] = Field(default=None, description="The cluster the connection was made for.", alias="clusterName")
     connection_id: Optional[StrictStr] = Field(default=None, description="The ID the connect endpoint returned; omitted for callers who are not organization admins.", alias="connectionId")
     last_error: Optional[StrictStr] = Field(default=None, description="Why the latest setup did not finish; omitted for callers who are not organization admins.", alias="lastError")
-    message: Optional[StrictStr] = Field(default=None, description="Says in one sentence how the connection stands and that its cluster does not exist yet.", json_schema_extra={"examples": ["Connected for Amazon EKS. No cluster named prod exists yet."]})
+    message: Optional[StrictStr] = Field(default=None, description="Says in one sentence how the connection stands and that no cluster with its name is in AstroPulse.", json_schema_extra={"examples": ["Connected for Amazon EKS. No cluster named prod is in AstroPulse."]})
     provisioner: Optional[ProvisionerType] = Field(default=None, description="The kind of cluster the connection was made for; omitted when unknown.")
     provisioner_name: Optional[StrictStr] = Field(default=None, description="The provisioner's name for people, such as Amazon EKS; omitted when unknown.", alias="provisionerName", json_schema_extra={"examples": ["Amazon EKS"]})
     started_at: Optional[StrictStr] = Field(default=None, description="When the connection's latest setup started.", alias="startedAt")

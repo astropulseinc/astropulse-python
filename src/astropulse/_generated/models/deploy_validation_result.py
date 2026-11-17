@@ -35,10 +35,11 @@ class DeployValidationResult(BaseModel):
     placement: Optional[ModelPlacement] = Field(default=None, description="Says where a model's GPU replicas would run when a GPU node pool launches their nodes; absent otherwise.")
     runtime: Optional[ModelRuntimeChoice] = Field(default=None, description="The serving runtime a model would run on and the format it is served as; absent for an application that is not a model or a format no supported runtime serves.")
     scaling: Optional[ModelScalingRule] = Field(default=None, description="How a model's replicas would scale; absent for other source types.")
+    target_namespace: Optional[StrictStr] = Field(default=None, description="The namespace on the cluster the application would run in.", alias="targetNamespace")
     title: Optional[StrictStr] = Field(default=None, description="The verdict as a headline to show.")
     unfinished_checks: Optional[List[StrictStr]] = Field(default=None, description="Names the checks that did not finish, so they neither passed nor failed.", alias="unfinishedChecks")
     verdict: Optional[DryRunVerdict] = Field(default=None, description="How the dry run ended: Passed, Failed, or Unfinished when some checks did not finish and none failed.")
-    __properties: ClassVar[List[str]] = ["changes", "message", "notices", "outcome", "placement", "runtime", "scaling", "title", "unfinishedChecks", "verdict"]
+    __properties: ClassVar[List[str]] = ["changes", "message", "notices", "outcome", "placement", "runtime", "scaling", "targetNamespace", "title", "unfinishedChecks", "verdict"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -121,6 +122,7 @@ class DeployValidationResult(BaseModel):
             "placement": ModelPlacement.from_dict(obj["placement"]) if obj.get("placement") is not None else None,
             "runtime": ModelRuntimeChoice.from_dict(obj["runtime"]) if obj.get("runtime") is not None else None,
             "scaling": ModelScalingRule.from_dict(obj["scaling"]) if obj.get("scaling") is not None else None,
+            "targetNamespace": obj.get("targetNamespace"),
             "title": obj.get("title"),
             "unfinishedChecks": obj.get("unfinishedChecks"),
             "verdict": obj.get("verdict")

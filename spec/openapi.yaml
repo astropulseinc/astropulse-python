@@ -4781,8 +4781,7 @@ components:
             can.
           type: string
         pendingConnections:
-          description: Connections to the account made for clusters that do not exist
-            yet.
+          description: Connections to the account whose clusters are not in AstroPulse.
           items:
             $ref: '#/components/schemas/CloudAccountPendingConnection'
           type: array
@@ -4862,9 +4861,9 @@ components:
             are not organization admins.
           type: string
         message:
-          description: Says in one sentence how the connection stands and that its
-            cluster does not exist yet.
-          example: Connected for Amazon EKS. No cluster named prod exists yet.
+          description: Says in one sentence how the connection stands and that no
+            cluster with its name is in AstroPulse.
+          example: Connected for Amazon EKS. No cluster named prod is in AstroPulse.
           type: string
         provisioner:
           allOf:
@@ -9753,6 +9752,9 @@ components:
           - $ref: '#/components/schemas/ModelScalingRule'
           description: How a model's replicas would scale; absent for other source
             types.
+        targetNamespace:
+          description: The namespace on the cluster the application would run in.
+          type: string
         title:
           description: The verdict as a headline to show.
           type: string
@@ -11952,8 +11954,8 @@ components:
           description: 'Who can reach the endpoint: Public (from the internet) or
             Private (only from inside the cluster''s network).
 
-            Omitted takes the default of the path that serves it: the nginx-ingress
-            or gateway add-on''s exposure, or Public for a LoadBalancer.'
+            Omitted takes the default of the path that serves it: the Ingress or Gateway
+            add-on''s Exposure setting, or Public for a LoadBalancer.'
         hostname:
           description: '(image and model applications): serve the app at exactly this
             hostname — a
@@ -11970,8 +11972,8 @@ components:
           description: '(applications exposed through Ingress) is how the endpoint''s
             TLS is
 
-            served. Omitted takes the default of the cluster''s nginx-ingress add-on;
-            a model application takes Certificate only.'
+            served. Omitted takes the default of the cluster''s Ingress add-on; a
+            model application takes Certificate only.'
       type: object
     ExternalAccessTLS:
       properties:
@@ -11980,7 +11982,7 @@ components:
           - $ref: '#/components/schemas/TLSMode'
           description: 'Certificate (a certificate issued for the endpoint''s hostname),
 
-            Wildcard (the nginx-ingress add-on''s wildcard certificate) or Passthrough
+            Wildcard (the Ingress add-on''s wildcard certificate) or Passthrough
 
             (the application serves TLS itself on its port).'
       type: object
@@ -14002,9 +14004,9 @@ components:
           allOf:
           - $ref: '#/components/schemas/WorkloadIdentityStatus'
           description: 'Whether workloads on this cluster can sign in to its cloud
-            as an identity of their own. Omitted for registered
+            as an identity of their own. UserManaged on a
 
-            clusters and other cases where it isn''t known.'
+            registered cluster; omitted where it isn''t known.'
       type: object
     K8sClusterAddonManifest:
       properties:
@@ -16298,13 +16300,14 @@ components:
       - ClientOutdated
       - NotificationChannelNotInPlan
       - FeatureNotInPlan
+      - PlanLimitReached
       type: string
       x-enum-descriptions:
       - The application's name is taken under the domain, so the application is served
         at its generated name.
       - The cluster's metrics may not collect the signal the model scales on.
-      - The application is exposed through Ingress on a cluster with no nginx-ingress
-        add-on, so nothing may serve its hostname.
+      - The application is exposed through Ingress on a cluster with no Ingress add-on,
+        so nothing may serve its hostname.
       - Where an application exposed through Ingress will be served, and which certificate
         it presents.
       - The model runs at a fixed replica count because the cluster cannot scale it
@@ -16445,7 +16448,7 @@ components:
       - A deploy AstroPulse started on its own replaced the application's load balancer
         and left the earlier one running.
       - The apply takes away the endpoint the application has now.
-      - The vulnerability-scanning add-on is not installed on the cluster.
+      - The Vulnerability Scanning add-on is not installed on the cluster.
       - No workload runs in the namespaces the scanner covers.
       - No image on the cluster could be scanned.
       - The scanner has not finished its first scan.
@@ -16549,6 +16552,7 @@ components:
         one resolves it.
       - The organization's plan does not include the notification channel.
       - The organization's plan does not include this feature.
+      - The organization has used all of this resource its plan allows.
       x-enum-labels:
       - Hostname already taken
       - Scaling signal may not be collected
@@ -16727,6 +16731,7 @@ components:
       - This CLI is too old
       - Not included in your plan
       - Not available on your plan
+      - Plan limit reached
       x-enum-varnames:
       - HostnameTaken
       - ScalingUnconfirmed
@@ -16905,6 +16910,7 @@ components:
       - ClientOutdated
       - NotificationChannelNotInPlan
       - FeatureNotInPlan
+      - PlanLimitReached
     NoticeOperation:
       enum:
       - addOrganizationMember
@@ -17003,6 +17009,7 @@ components:
       - getOpenApiDocument
       - getOrganization
       - getOrganizationPlan
+      - getOrganizationUsage
       - getPricing
       - getSelfHostedAwsTemplate
       - getSelfHostedCloudConnection
@@ -17371,6 +17378,10 @@ components:
       - Returns the organization's details, such as its name and plan. Members and
         the owner's ID are returned only to an admin or owner.
       - Get the current subscription plan for an organization
+      - The organization's plan and, for each resource the plan limits by number,
+        how many it uses, how many the plan allows and the plan that allows more.
+        These are the figures a PlanLimitReached refusal reports, readable before
+        any request. A resource the plan does not limit is left out.
       - Returns all active pricing plans and categories. No authentication required.
       - Returns the CloudFormation template a self-hosted cluster's setup deploys,
         for review or an IaC pipeline.
@@ -17418,7 +17429,7 @@ components:
         are returned.'
       - One entry per cloud account (and Azure resource group) the organization connected
         or runs clusters in, with its state, the clusters in it and the connections
-        made for clusters that do not exist yet. Connections not checked in the last
+        whose clusters are not in AstroPulse. Connections not checked in the last
         five minutes are checked again when the list is read; verifiedAt is when a
         check last got an answer from the account.
       - Every cloud account connection the organization has set up, newest first,
@@ -17720,6 +17731,7 @@ components:
       - Get the API document
       - Get organization by ID
       - Get organization plan
+      - Read the organization's plan limits and usage
       - Get complete pricing data
       - Get the self-hosted AWS setup template
       - Check a self-hosted cluster's cloud credentials
@@ -17908,6 +17920,7 @@ components:
       - GetOpenApiDocument
       - GetOrganization
       - GetOrganizationPlan
+      - GetOrganizationUsage
       - GetPricing
       - GetSelfHostedAwsTemplate
       - GetSelfHostedCloudConnection
@@ -19026,6 +19039,137 @@ components:
       x-enum-varnames:
       - Developer
       - Enterprise
+    PlanLimitState:
+      enum:
+      - Within
+      - Reached
+      - Exceeded
+      type: string
+      x-enum-comments:
+        Exceeded: The organization uses more than the plan allows, from before the
+          limit applied; adding more is refused until it is under.
+        Reached: The organization uses all the plan allows; adding one more is refused.
+        Within: The organization can add more under its plan.
+      x-enum-descriptions:
+      - The organization can add more under its plan.
+      - The organization uses all the plan allows; adding one more is refused.
+      - The organization uses more than the plan allows, from before the limit applied;
+        adding more is refused until it is under.
+      x-enum-labels:
+      - Within limit
+      - At limit
+      - Over limit
+      x-enum-varnames:
+      - Within
+      - Reached
+      - Exceeded
+    PlanLimitUsage:
+      properties:
+        category:
+          description: The pricing category the resource belongs to.
+          type: string
+        limit:
+          description: How many the plan allows.
+          type: integer
+        requiredPlan:
+          description: The first plan above this one that allows more; absent when
+            none does.
+          type: string
+        requiredPlanName:
+          description: The required plan's name, such as Enterprise. Its limits are
+            negotiated, so no number is given.
+          type: string
+        resource:
+          allOf:
+          - $ref: '#/components/schemas/PlanResource'
+          description: The resource the limit counts.
+        state:
+          allOf:
+          - $ref: '#/components/schemas/PlanLimitState'
+          description: How the usage stands against the limit.
+        used:
+          description: How many the organization uses now.
+          type: integer
+      type: object
+    PlanResource:
+      enum:
+      - Applications
+      - Clusters
+      - RegisteredClusters
+      - ApplicationProfiles
+      - ServiceAccounts
+      - APIKeys
+      - NotificationSubscriptions
+      - NotificationProviders
+      - Organizations
+      type: string
+      x-enum-comments:
+        APIKeys: Active API keys in the organization.
+        ApplicationProfiles: Application profiles in the organization.
+        Applications: Applications and models deployed in the organization.
+        Clusters: Clusters AstroPulse created for the organization.
+        NotificationProviders: Notification channels connected to the organization.
+        NotificationSubscriptions: Notification subscriptions in the organization.
+        Organizations: Organizations the caller belongs to.
+        RegisteredClusters: Clusters the organization registered with the AstroPulse
+          agent.
+        ServiceAccounts: Active service accounts in the organization.
+      x-enum-descriptions:
+      - Applications and models deployed in the organization.
+      - Clusters AstroPulse created for the organization.
+      - Clusters the organization registered with the AstroPulse agent.
+      - Application profiles in the organization.
+      - Active service accounts in the organization.
+      - Active API keys in the organization.
+      - Notification subscriptions in the organization.
+      - Notification channels connected to the organization.
+      - Organizations the caller belongs to.
+      x-enum-labels:
+      - Applications
+      - Clusters
+      - Registered clusters
+      - Application profiles
+      - Service accounts
+      - API keys
+      - Notification subscriptions
+      - Notification providers
+      - Organizations
+      x-enum-varnames:
+      - Applications
+      - Clusters
+      - RegisteredClusters
+      - ApplicationProfiles
+      - ServiceAccounts
+      - APIKeys
+      - NotificationSubscriptions
+      - NotificationProviders
+      - Organizations
+    PlanUsage:
+      properties:
+        limits:
+          description: One entry per resource the plan limits by number; a resource
+            with no limit is left out.
+          items:
+            $ref: '#/components/schemas/PlanLimitUsage'
+          type: array
+        plan:
+          description: The plan's id, such as developer.
+          type: string
+        planName:
+          description: The plan's name, such as Developer.
+          type: string
+      type: object
+    PlanUsageResponse:
+      properties:
+        data:
+          $ref: '#/components/schemas/PlanUsage'
+        id:
+          type: string
+        message:
+          type: string
+        status:
+          type: string
+      type: object
     PreflightCategory:
       enum:
       - Automated
@@ -20048,14 +20192,15 @@ components:
       type: string
       x-enum-comments:
         NotScannable: The scanner could not report a result for it.
-        OutOfScope: The scanScope setting of the vulnerability-scanning add-on leaves
-          it out.
+        OutOfScope: The Namespaces to scan setting of the Vulnerability Scanning add-on
+          leaves it out.
         Pending: The scanner has not reported on it yet.
         ResultNotStored: Its scan finished, but the result could not be stored, usually
           because it is too large.
       x-enum-descriptions:
       - The scanner has not reported on it yet.
-      - The scanScope setting of the vulnerability-scanning add-on leaves it out.
+      - The Namespaces to scan setting of the Vulnerability Scanning add-on leaves
+        it out.
       - Its scan finished, but the result could not be stored, usually because it
         is too large.
       - The scanner could not report a result for it.
@@ -21207,10 +21352,10 @@ components:
       x-enum-comments:
         Certificate: A certificate issued for the endpoint's hostname.
         Passthrough: TLS passes through to the application, which serves it itself.
-        Wildcard: The nginx-ingress add-on's wildcard certificate.
+        Wildcard: The Ingress add-on's wildcard certificate.
       x-enum-descriptions:
       - A certificate issued for the endpoint's hostname.
-      - The nginx-ingress add-on's wildcard certificate.
+      - The Ingress add-on's wildcard certificate.
       - TLS passes through to the application, which serves it itself.
       x-enum-labels:
       - Certificate
@@ -22644,23 +22789,30 @@ components:
       enum:
       - Available
       - Missing
+      - UserManaged
       type: string
       x-enum-comments:
         Available: Workloads on the cluster can sign in to its cloud as an identity
           of their own.
         Missing: The cluster is not set up for workloads to sign in to its cloud as
           an identity of their own.
+        UserManaged: AstroPulse did not create this cluster, so its cloud identity
+          is yours to manage; bind one with an add-on's or model's identity.
       x-enum-descriptions:
       - Workloads on the cluster can sign in to its cloud as an identity of their
         own.
       - The cluster is not set up for workloads to sign in to its cloud as an identity
         of their own.
+      - AstroPulse did not create this cluster, so its cloud identity is yours to
+        manage; bind one with an add-on's or model's identity.
       x-enum-labels:
       - Available
       - Missing
+      - User managed
       x-enum-varnames:
       - Available
       - Missing
+      - UserManaged
     WorkloadImpactAnalysis:
       properties:
         criticalWorkloads:
@@ -23285,7 +23437,7 @@ info:
     tools, and authorized automation.'
   termsOfService: https://astropulse.io/terms
   title: AstroPulse Platform API
-  version: v1.0.4
+  version: v1.0.5
   x-scalar-sdk-installation:
   - description: '```sh
 
@@ -28124,9 +28276,9 @@ paths:
       description: 'One entry per cloud account (and Azure resource group) the organization
         connected or runs clusters in, with its state, the
 
-        clusters in it and the connections made for clusters that do not exist yet.
-        Connections not checked in the last five minutes are checked again when the
-        list is read; verifiedAt is when a check last got an answer from the account.'
+        clusters in it and the connections whose clusters are not in AstroPulse. Connections
+        not checked in the last five minutes are checked again when the list is read;
+        verifiedAt is when a check last got an answer from the account.'
       operationId: listCloudAccounts
       parameters:
       - description: Also count failed or unfinished setups older than three days
@@ -41354,6 +41506,91 @@ paths:
 
           const { data } = await sdk.serviceAccounts.revokeServiceAccountKey({ orgId,
           serviceAccountId, keyId });'
+  /api/v1/organizations/{orgId}/usage:
+    get:
+      description: The organization's plan and, for each resource the plan limits
+        by number, how many it uses, how many the plan allows and the plan that allows
+        more. These are the figures a PlanLimitReached refusal reports, readable before
+        any request. A resource the plan does not limit is left out.
+      operationId: getOrganizationUsage
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanUsageResponse'
+          description: The plan and its limits with usage
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not a member of the organization
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Rate limit exceeded
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Internal server error
+      security:
+      - ApiKeyAuth: []
+      - BearerAuth: []
+      summary: Read the organization's plan limits and usage
+      tags:
+      - Organizations
+      x-codeSamples:
+      - label: astropulse
+        lang: python
+        source: 'from astropulse import Client
+
+
+          client = Client()
+
+          result = client.organizations.get_organization_usage(org_id)'
+      - label: astropulse-sdk
+        lang: javascript
+        source: 'import { AstroPulseSDK } from ''astropulse-sdk'';
+
+
+          const sdk = new AstroPulseSDK(process.env.ASTROPULSE_API_KEY!);
+
+          const { data } = await sdk.organizations.getOrganizationUsage({ orgId });'
+      x-scalar-examples:
+      - label: astropulse
+        lang: python
+        source: 'from astropulse import Client
+
+
+          client = Client()
+
+          result = client.organizations.get_organization_usage(org_id)'
+      - label: astropulse-sdk
+        lang: javascript
+        source: 'import { AstroPulseSDK } from ''astropulse-sdk'';
+
+
+          const sdk = new AstroPulseSDK(process.env.ASTROPULSE_API_KEY!);
+
+          const { data } = await sdk.organizations.getOrganizationUsage({ orgId });'
   /api/v1/plans:
     get:
       description: Every plan an organization can be on. For the plan one is actually

@@ -29,9 +29,9 @@ class ExternalAccess(BaseModel):
     access_type: Optional[ExternalAccessType] = Field(default=None, description="Defines the external access type", alias="accessType")
     dns_endpoint: Optional[StrictStr] = Field(default=None, description="The resolved served hostname. For image and model applications it is derived from domain/hostname. For Helm and repository applications it is the hostname the chart serves, shown for reference. example: sub.domain.com", alias="dnsEndpoint")
     domain: Optional[StrictStr] = Field(default=None, description="(image and model applications): a verified domain to generate the app's hostname under; the app is served at <app>.<domain>. Mutually exclusive with hostname. example: example.com")
-    exposure: Optional[EndpointExposure] = Field(default=None, description="Who can reach the endpoint: Public (from the internet) or Private (only from inside the cluster's network). Omitted takes the default of the path that serves it: the nginx-ingress or gateway add-on's exposure, or Public for a LoadBalancer.")
+    exposure: Optional[EndpointExposure] = Field(default=None, description="Who can reach the endpoint: Public (from the internet) or Private (only from inside the cluster's network). Omitted takes the default of the path that serves it: the Ingress or Gateway add-on's Exposure setting, or Public for a LoadBalancer.")
     hostname: Optional[StrictStr] = Field(default=None, description="(image and model applications): serve the app at exactly this hostname — a verified domain's apex, or a hostname under a verified domain. Mutually exclusive with domain. example: shop.example.com")
-    tls: Optional[ExternalAccessTLS] = Field(default=None, description="(applications exposed through Ingress) is how the endpoint's TLS is served. Omitted takes the default of the cluster's nginx-ingress add-on; a model application takes Certificate only.")
+    tls: Optional[ExternalAccessTLS] = Field(default=None, description="(applications exposed through Ingress) is how the endpoint's TLS is served. Omitted takes the default of the cluster's Ingress add-on; a model application takes Certificate only.")
     __properties: ClassVar[List[str]] = ["accessPolicyRef", "accessType", "dnsEndpoint", "domain", "exposure", "hostname", "tls"]
 
     model_config = ConfigDict(

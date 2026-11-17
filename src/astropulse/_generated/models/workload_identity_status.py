@@ -22,6 +22,7 @@ class WorkloadIdentityStatus(str, Enum):
     """
     Available = 'Available'
     Missing = 'Missing'
+    UserManaged = 'UserManaged'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

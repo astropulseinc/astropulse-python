@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **clusters** | [**List[CloudAccountCluster]**](CloudAccountCluster.md) | The organization&#39;s clusters in the account. | [optional] 
 **connected_at** | **str** | When a connection to the account first finished its setup. | [optional] 
 **disconnect_blocked_reason** | **str** | Says why the account cannot be disconnected; empty when it can. | [optional] 
-**pending_connections** | [**List[CloudAccountPendingConnection]**](CloudAccountPendingConnection.md) | Connections to the account made for clusters that do not exist yet. | [optional] 
+**pending_connections** | [**List[CloudAccountPendingConnection]**](CloudAccountPendingConnection.md) | Connections to the account whose clusters are not in AstroPulse. | [optional] 
 **provider** | [**Provider**](Provider.md) | The cloud the account is in. | [optional] 
 **regions** | **List[str]** | The regions the account&#39;s connections and clusters are in; omitted for callers who are not organization admins. | [optional] 
 **resource_group** | **str** | The Azure resource group the account&#39;s connections were made for; omitted for callers who are not organization admins. | [optional] 
