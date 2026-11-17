@@ -48,10 +48,10 @@ jobs:
       - name: The release app is configured
         if: steps.version.outputs.tagged != 'true'
         env:
-          HAS_APP: ${{ secrets.RELEASE_APP_CLIENT_ID != '' && secrets.RELEASE_APP_PRIVATE_KEY != '' }}
+          HAS_APP: ${{ secrets.ASTROPULSE_CI_CLIENT_ID != '' && secrets.ASTROPULSE_CI_PRIVATE_KEY != '' }}
         run: |
           if [ "${HAS_APP}" != "true" ]; then
-            echo "::error::Set RELEASE_APP_CLIENT_ID and RELEASE_APP_PRIVATE_KEY to tag releases, then re-run this workflow."
+            echo "::error::Set ASTROPULSE_CI_CLIENT_ID and ASTROPULSE_CI_PRIVATE_KEY to tag releases, then re-run this workflow."
             exit 1
           fi
 
@@ -59,8 +59,8 @@ jobs:
         if: steps.version.outputs.tagged != 'true'
         id: app
         with:
-          client-id: ${{ secrets.RELEASE_APP_CLIENT_ID }}
-          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          client-id: ${{ secrets.ASTROPULSE_CI_CLIENT_ID }}
+          private-key: ${{ secrets.ASTROPULSE_CI_PRIVATE_KEY }}
           permission-contents: write
 
       - name: Tag v${{ steps.version.outputs.version }}

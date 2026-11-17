@@ -63,15 +63,15 @@ jobs:
         id: has-app
         if: steps.sync.outputs.status == 'changed'
         env:
-          HAS_APP: ${{ secrets.RELEASE_APP_CLIENT_ID != '' && secrets.RELEASE_APP_PRIVATE_KEY != '' }}
+          HAS_APP: ${{ secrets.ASTROPULSE_CI_CLIENT_ID != '' && secrets.ASTROPULSE_CI_PRIVATE_KEY != '' }}
         run: echo "configured=${HAS_APP}" >> "$GITHUB_OUTPUT"
 
       - uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510  # v3.3.0
         id: app
         if: steps.has-app.outputs.configured == 'true'
         with:
-          client-id: ${{ secrets.RELEASE_APP_CLIENT_ID }}
-          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          client-id: ${{ secrets.ASTROPULSE_CI_CLIENT_ID }}
+          private-key: ${{ secrets.ASTROPULSE_CI_PRIVATE_KEY }}
           permission-contents: write
           permission-pull-requests: write
 

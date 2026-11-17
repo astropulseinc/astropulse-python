@@ -46,5 +46,5 @@ workflow tags `v<version>`, and the release workflow checks that tag, runs `make
 publishes to PyPI through Trusted Publishing (no token is stored here, and PyPI records an
 attestation of the build), and creates the GitHub release. A merge that does not change the
 version releases nothing. The tag is created with a GitHub App token (repository secrets
-`RELEASE_APP_CLIENT_ID` and `RELEASE_APP_PRIVATE_KEY`), because a tag created with the built-in
+`ASTROPULSE_CI_CLIENT_ID` and `ASTROPULSE_CI_PRIVATE_KEY`), because a tag created with the built-in
 token does not start the release workflow.
