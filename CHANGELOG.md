@@ -1,12 +1,13 @@
 # Changelog
 
-All notable changes to this package are recorded here. It follows
-[semantic versioning](https://semver.org), independently of the API version: an additive API
-change is a minor release, and anything that breaks a caller of this package is a major one.
+All notable changes to this package are recorded here. A release's version is the API version
+it was generated from: 1.0.5 is generated from platform API v1.0.5. A fix to this package alone,
+against the same API, is released as 1.0.5.post1. For what changed in the API itself, see the
+[platform changelog](https://astropulse.io/docs/latest/platform/change-log).
 
-## Unreleased
+## 1.0.5
 
-First release.
+First release, generated from API v1.0.5.
 
 - A generated client for the whole AstroPulse Platform API: applications, models, clusters,
   add-ons, domains, cloud accounts, access policies, integrations, API keys, organizations and

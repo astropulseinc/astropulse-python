@@ -9,10 +9,9 @@ per status -- :class:`NotFoundException` and its siblings, all of them
 Catch :class:`OpenApiException` to catch everything the client can raise,
 including the argument errors it checks before sending anything.
 
-``__version__`` is this package's own; ``__api_version__`` is the platform
-build whose API document it was generated from. They move independently: a
-client fix ships without an API change, and an API change reaches callers only
-when the SDK is regenerated and released.
+``__api_version__`` is the platform API version the package was generated
+from, and ``__version__`` follows it: 1.0.5 is generated from API v1.0.5, and
+a fix to this package alone, against the same API, is 1.0.5.post1.
 """
 
 from ._api_version import __api_version__

@@ -11,15 +11,16 @@
 </p>
 
 <p align="center">
+  <a href="https://pypi.org/project/astropulse/"><img src="https://img.shields.io/pypi/v/astropulse" alt="PyPI"></a>
   <a href="https://github.com/astropulseinc/astropulse-python/actions/workflows/ci.yml"><img src="https://github.com/astropulseinc/astropulse-python/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue" alt="Python 3.10 to 3.13">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License: Apache-2.0"></a>
+  <img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-blue" alt="Python 3.10 to 3.14">
+  <a href="https://github.com/astropulseinc/astropulse-python/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License: Apache-2.0"></a>
 </p>
 
 <p align="center">
   <a href="https://astropulse.io/docs/latest/platform/python-sdk"><b>Documentation</b></a> ·
   <a href="https://astropulse.io/docs/api/">API reference</a> ·
-  <a href="examples/">Examples</a> ·
+  <a href="https://github.com/astropulseinc/astropulse-python/tree/main/examples">Examples</a> ·
   <a href="https://astropulse.io">astropulse.io</a>
 </p>
 
@@ -32,16 +33,19 @@ its retry and timeout policy, and `wait_until_serving` are hand-written.
 ## Install
 
 ```bash
-pip install "git+https://github.com/astropulseinc/astropulse-python"
+pip install astropulse
 ```
 
-To run the [examples](examples/), install the `examples` extra too:
+To run the [examples](https://github.com/astropulseinc/astropulse-python/tree/main/examples), install the `examples` extra too:
 
 ```bash
-pip install "astropulse[examples] @ git+https://github.com/astropulseinc/astropulse-python"
+pip install "astropulse[examples]"
 ```
 
-Requires Python 3.10 or later. Create an API key in the [console](https://astropulse.io) under
+Supports Python 3.10 to 3.14. The package version is the API version it was generated from
+(1.0.5 is API v1.0.5); see the [changelog](https://github.com/astropulseinc/astropulse-python/blob/main/CHANGELOG.md).
+
+Create an API key in the [console](https://astropulse.io) under
 **Settings → API Keys**, and export it:
 
 ```bash
@@ -158,7 +162,7 @@ administer clusters; no service account can manage credentials or ownership. Rot
 replacement key, switching your integration over, then revoking the old key. Archiving an account
 disables all its keys. See the
 [service-account guide](https://astropulse.io/docs/platform/organization/service-accounts) and the
-[API reference](docs/ServiceAccountsApi.md).
+[API reference](https://github.com/astropulseinc/astropulse-python/blob/main/docs/ServiceAccountsApi.md).
 
 ## Beyond models
 
@@ -170,21 +174,21 @@ for cluster in ap.clusters.list_clusters().data or []:
     print(cluster.cluster_name, cluster.state.value if cluster.state else "")
 ```
 
-The [examples](examples/) run end to end. Every resource and type has a reference page under
-[docs/](docs/). If you type-check your code, enable pydantic's mypy plugin
+The [examples](https://github.com/astropulseinc/astropulse-python/tree/main/examples) run end to end. Every resource and type has a reference page under
+[docs/](https://github.com/astropulseinc/astropulse-python/tree/main/docs). If you type-check your code, enable pydantic's mypy plugin
 (`plugins = ["pydantic.mypy"]`).
 
 ## Support
 
 - Documentation: [astropulse.io/docs](https://astropulse.io/docs)
 - Bugs and feature requests: [GitHub issues](https://github.com/astropulseinc/astropulse-python/issues)
-- Security: see [SECURITY.md](SECURITY.md)
+- Security: see [SECURITY.md](https://github.com/astropulseinc/astropulse-python/blob/main/SECURITY.md)
 
 ## Contributing
 
-This SDK is generated from the platform's API document. See [CONTRIBUTING.md](CONTRIBUTING.md)
+This SDK is generated from the platform's API document. See [CONTRIBUTING.md](https://github.com/astropulseinc/astropulse-python/blob/main/CONTRIBUTING.md)
 for how to regenerate it and what is safe to edit by hand.
 
 ## License
 
-[Apache-2.0](LICENSE) © AstroPulse
+[Apache-2.0](https://github.com/astropulseinc/astropulse-python/blob/main/LICENSE) © AstroPulse
