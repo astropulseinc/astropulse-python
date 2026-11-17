@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security problem
+    url: https://github.com/astropulseinc/astropulse-python/security/advisories/new
+    about: Report it privately. Please do not open a public issue.
+  - name: AstroPulse documentation
+    url: https://astropulse.io/docs
+    about: Guides and the API reference.
