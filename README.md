@@ -36,13 +36,16 @@ its retry and timeout policy, and `wait_until_serving` are hand-written.
 ## Install
 
 ```bash
-pip install astropulse
+python3 -m pip install astropulse
 ```
+
+If your system Python refuses with "externally-managed-environment", install into a virtual
+environment, or for your user only with `python3 -m pip install --user astropulse`.
 
 To run the [examples](https://github.com/astropulseinc/astropulse-python/tree/main/examples), install the `examples` extra too:
 
 ```bash
-pip install "astropulse[examples]"
+python3 -m pip install "astropulse[examples]"
 ```
 
 Supports Python 3.10 to 3.14. The package version is the API version it was generated from
