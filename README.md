@@ -1,6 +1,9 @@
 <p align="center">
   <a href="https://astropulse.io">
-    <img src="https://astropulse.io/images/logo.svg" alt="AstroPulse" width="96">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://astropulse.io/images/brand/astropulse-logo-on-dark.svg">
+      <img src="https://astropulse.io/images/brand/astropulse-logo-on-light.svg" alt="AstroPulse" width="240">
+    </picture>
   </a>
 </p>
 
