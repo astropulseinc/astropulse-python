@@ -25,7 +25,7 @@ class AuditStats(BaseModel):
     events_by_action: Optional[Dict[str, StrictInt]] = Field(default=None, description="Counts events per action, keyed by the action, such as Create.", alias="eventsByAction")
     events_by_type: Optional[Dict[str, StrictInt]] = Field(default=None, description="Counts events per event type, keyed by the event type, such as Cluster.", alias="eventsByType")
     org_id: Optional[StrictStr] = Field(default=None, description="The organization these statistics are for", alias="orgId")
-    period: Optional[StrictStr] = Field(default=None, description="Indicates the time period for these statistics (7d, 30d, 90d)")
+    period: Optional[StrictStr] = Field(default=None, description="The period counted up to now (7d, 30d or 90d); empty when the request gave its own start or end date")
     top_users: Optional[List[UserEventCount]] = Field(default=None, description="Lists the users with the most audit events", alias="topUsers")
     total_events: Optional[StrictInt] = Field(default=None, description="The total number of audit events in the specified period", alias="totalEvents")
     __properties: ClassVar[List[str]] = ["eventsByAction", "eventsByType", "orgId", "period", "topUsers", "totalEvents"]

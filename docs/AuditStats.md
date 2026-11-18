@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **events_by_action** | **Dict[str, int]** | Counts events per action, keyed by the action, such as Create. | [optional] 
 **events_by_type** | **Dict[str, int]** | Counts events per event type, keyed by the event type, such as Cluster. | [optional] 
 **org_id** | **str** | The organization these statistics are for | [optional] 
-**period** | **str** | Indicates the time period for these statistics (7d, 30d, 90d) | [optional] 
+**period** | **str** | The period counted up to now (7d, 30d or 90d); empty when the request gave its own start or end date | [optional] 
 **top_users** | [**List[UserEventCount]**](UserEventCount.md) | Lists the users with the most audit events | [optional] 
 **total_events** | **int** | The total number of audit events in the specified period | [optional] 
 

@@ -147,12 +147,14 @@ from ._generated.models.attempt_status import AttemptStatus as AttemptStatus
 from ._generated.models.attempt_status_info import AttemptStatusInfo as AttemptStatusInfo
 from ._generated.models.audit_action import AuditAction as AuditAction
 from ._generated.models.audit_actor_type import AuditActorType as AuditActorType
+from ._generated.models.audit_detail_item import AuditDetailItem as AuditDetailItem
 from ._generated.models.audit_event import AuditEvent as AuditEvent
 from ._generated.models.audit_event_list import AuditEventList as AuditEventList
 from ._generated.models.audit_event_list_response import AuditEventListResponse as AuditEventListResponse
 from ._generated.models.audit_event_response import AuditEventResponse as AuditEventResponse
 from ._generated.models.audit_event_type import AuditEventType as AuditEventType
 from ._generated.models.audit_export_format import AuditExportFormat as AuditExportFormat
+from ._generated.models.audit_network import AuditNetwork as AuditNetwork
 from ._generated.models.audit_source import AuditSource as AuditSource
 from ._generated.models.audit_stats import AuditStats as AuditStats
 from ._generated.models.audit_stats_response import AuditStatsResponse as AuditStatsResponse
@@ -896,12 +898,14 @@ __all__ = [
     "AttemptStatusInfo",
     "AuditAction",
     "AuditActorType",
+    "AuditDetailItem",
     "AuditEvent",
     "AuditEventList",
     "AuditEventListResponse",
     "AuditEventResponse",
     "AuditEventType",
     "AuditExportFormat",
+    "AuditNetwork",
     "AuditSource",
     "AuditStats",
     "AuditStatsResponse",

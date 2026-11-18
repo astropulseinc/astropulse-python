@@ -5,6 +5,10 @@ it was generated from: 1.0.5 is generated from platform API v1.0.5. A fix to thi
 against the same API, is released as 1.0.5.post1. For what changed in the API itself, see the
 [platform changelog](https://astropulse.io/docs/latest/platform/change-log).
 
+## 1.0.6
+
+Generated from API v1.0.6.
+
 ## 1.0.5
 
 First release, generated from API v1.0.5.

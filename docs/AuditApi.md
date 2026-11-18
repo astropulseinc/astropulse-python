@@ -63,7 +63,7 @@ with astropulse._generated.ApiClient(configuration) as api_client:
     dry_run = True # bool | true lists only dry runs, requests that checked a change and made none (optional)
     include_dry_runs = True # bool | true lists dry runs alongside real changes; without it or dryRun, only real changes are listed (optional)
     include_reads = True # bool | true lists recorded reads of sensitive data, such as of this log; without it, reads are listed only when action is Read (optional)
-    q = 'q_example' # str | Case-insensitive text search over action, resource, resource ID, actor name and email, source and IP address (optional)
+    q = 'q_example' # str | Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address (optional)
     start_date = 'start_date_example' # str | Start of the range: an instant (2024-01-15T10:30:00Z) or a date (2024-01-15, from its start, UTC). Alone, the range runs to now. (optional)
     end_date = 'end_date_example' # str | End of the range: an instant (2024-01-16T23:59:59Z) or a date (2024-01-16, through its end, UTC). Alone, the range reaches back 30 days. (optional)
 
@@ -91,7 +91,7 @@ Name | Type | Description  | Notes
  **dry_run** | **bool**| true lists only dry runs, requests that checked a change and made none | [optional] 
  **include_dry_runs** | **bool**| true lists dry runs alongside real changes; without it or dryRun, only real changes are listed | [optional] 
  **include_reads** | **bool**| true lists recorded reads of sensitive data, such as of this log; without it, reads are listed only when action is Read | [optional] 
- **q** | **str**| Case-insensitive text search over action, resource, resource ID, actor name and email, source and IP address | [optional] 
+ **q** | **str**| Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address | [optional] 
  **start_date** | **str**| Start of the range: an instant (2024-01-15T10:30:00Z) or a date (2024-01-15, from its start, UTC). Alone, the range runs to now. | [optional] 
  **end_date** | **str**| End of the range: an instant (2024-01-16T23:59:59Z) or a date (2024-01-16, through its end, UTC). Alone, the range reaches back 30 days. | [optional] 
 
@@ -215,7 +215,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_audit_stats**
-> AuditStatsResponse get_audit_stats(period=period, include_dry_runs=include_dry_runs, include_reads=include_reads)
+> AuditStatsResponse get_audit_stats(period=period, event_type=event_type, action=action, user_id=user_id, resource_id=resource_id, dry_run=dry_run, include_dry_runs=include_dry_runs, include_reads=include_reads, q=q, start_date=start_date, end_date=end_date)
 
 Get audit statistics for an organization
 
@@ -228,6 +228,8 @@ Get audit statistics and analytics for an organization. Requires enterprise plan
 
 ```python
 import astropulse._generated
+from astropulse._generated.models.audit_action import AuditAction
+from astropulse._generated.models.audit_event_type import AuditEventType
 from astropulse._generated.models.audit_stats_response import AuditStatsResponse
 from astropulse._generated.rest import ApiException
 from pprint import pprint
@@ -258,13 +260,21 @@ configuration = astropulse._generated.Configuration(
 with astropulse._generated.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = astropulse._generated.AuditApi(api_client)
-    period = '30d' # str | The period the statistics cover: 7d, 30d or 90d (optional) (default to '30d')
+    period = '30d' # str | The period the statistics cover when startDate and endDate are absent: 7d, 30d or 90d (optional) (default to '30d')
+    event_type = astropulse._generated.AuditEventType() # AuditEventType | Only events of this type (optional)
+    action = astropulse._generated.AuditAction() # AuditAction | Only events with this action (optional)
+    user_id = 'user_id_example' # str | Only events by this user ID (optional)
+    resource_id = 'resource_id_example' # str | Only events on this resource ID (exact match) (optional)
+    dry_run = True # bool | true counts only dry runs (optional)
     include_dry_runs = True # bool | true also counts dry runs; by default only real changes are counted (optional)
-    include_reads = True # bool | true also counts recorded reads of sensitive data (optional)
+    include_reads = True # bool | true also counts recorded reads of sensitive data; without it, reads are counted only when action is Read (optional)
+    q = 'q_example' # str | Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address (optional)
+    start_date = 'start_date_example' # str | Start of the range: an instant or a date (from its start, UTC); replaces period (optional)
+    end_date = 'end_date_example' # str | End of the range: an instant or a date (through its end, UTC); replaces period (optional)
 
     try:
         # Get audit statistics for an organization
-        api_response = api_instance.get_audit_stats(period=period, include_dry_runs=include_dry_runs, include_reads=include_reads)
+        api_response = api_instance.get_audit_stats(period=period, event_type=event_type, action=action, user_id=user_id, resource_id=resource_id, dry_run=dry_run, include_dry_runs=include_dry_runs, include_reads=include_reads, q=q, start_date=start_date, end_date=end_date)
         print("The response of AuditApi->get_audit_stats:\n")
         pprint(api_response)
     except Exception as e:
@@ -278,9 +288,17 @@ with astropulse._generated.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **period** | **str**| The period the statistics cover: 7d, 30d or 90d | [optional] [default to &#39;30d&#39;]
+ **period** | **str**| The period the statistics cover when startDate and endDate are absent: 7d, 30d or 90d | [optional] [default to &#39;30d&#39;]
+ **event_type** | [**AuditEventType**](.md)| Only events of this type | [optional] 
+ **action** | [**AuditAction**](.md)| Only events with this action | [optional] 
+ **user_id** | **str**| Only events by this user ID | [optional] 
+ **resource_id** | **str**| Only events on this resource ID (exact match) | [optional] 
+ **dry_run** | **bool**| true counts only dry runs | [optional] 
  **include_dry_runs** | **bool**| true also counts dry runs; by default only real changes are counted | [optional] 
- **include_reads** | **bool**| true also counts recorded reads of sensitive data | [optional] 
+ **include_reads** | **bool**| true also counts recorded reads of sensitive data; without it, reads are counted only when action is Read | [optional] 
+ **q** | **str**| Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address | [optional] 
+ **start_date** | **str**| Start of the range: an instant or a date (from its start, UTC); replaces period | [optional] 
+ **end_date** | **str**| End of the range: an instant or a date (through its end, UTC); replaces period | [optional] 
 
 ### Return type
 
@@ -366,7 +384,7 @@ with astropulse._generated.ApiClient(configuration) as api_client:
     dry_run = True # bool | true lists only dry runs, requests that checked a change and made none (optional)
     include_dry_runs = True # bool | true lists dry runs alongside real changes; without it or dryRun, only real changes are listed (optional)
     include_reads = True # bool | true lists recorded reads of sensitive data, such as of this log; without it, reads are listed only when action is Read (optional)
-    q = 'q_example' # str | Case-insensitive text search over action, resource, resource ID, actor name and email, source and IP address (optional)
+    q = 'q_example' # str | Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address (optional)
     start_date = 'start_date_example' # str | Start of the range: an instant (2024-01-15T10:30:00Z) or a date (2024-01-15, from its start, UTC). Alone, the range runs to now. (optional)
     end_date = 'end_date_example' # str | End of the range: an instant (2024-01-16T23:59:59Z) or a date (2024-01-16, through its end, UTC). Alone, the range reaches back 30 days. (optional)
 
@@ -397,7 +415,7 @@ Name | Type | Description  | Notes
  **dry_run** | **bool**| true lists only dry runs, requests that checked a change and made none | [optional] 
  **include_dry_runs** | **bool**| true lists dry runs alongside real changes; without it or dryRun, only real changes are listed | [optional] 
  **include_reads** | **bool**| true lists recorded reads of sensitive data, such as of this log; without it, reads are listed only when action is Read | [optional] 
- **q** | **str**| Case-insensitive text search over action, resource, resource ID, actor name and email, source and IP address | [optional] 
+ **q** | **str**| Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address | [optional] 
  **start_date** | **str**| Start of the range: an instant (2024-01-15T10:30:00Z) or a date (2024-01-15, from its start, UTC). Alone, the range runs to now. | [optional] 
  **end_date** | **str**| End of the range: an instant (2024-01-16T23:59:59Z) or a date (2024-01-16, through its end, UTC). Alone, the range reaches back 30 days. | [optional] 
 

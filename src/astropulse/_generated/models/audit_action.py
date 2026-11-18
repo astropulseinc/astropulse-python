@@ -38,6 +38,7 @@ class AuditAction(str, Enum):
     DriftDetected = 'DriftDetected'
     SelfHealed = 'SelfHealed'
     Issue = 'Issue'
+    SignIn = 'SignIn'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

@@ -3737,6 +3737,7 @@ components:
       - DriftDetected
       - SelfHealed
       - Issue
+      - SignIn
       type: string
       x-enum-comments:
         Approve: The organization owner approved the change.
@@ -3754,6 +3755,7 @@ components:
         Rollback: The application was rolled back to an earlier version.
         RollbackResume: The application resumed following its configured source.
         SelfHealed: The drift was corrected automatically.
+        SignIn: The person signed in.
         Unregister: The cluster was unregistered.
         Update: The resource was changed.
         Upgrade: The cluster was upgraded to a newer Kubernetes version.
@@ -3776,6 +3778,7 @@ components:
       - What runs on the cluster no longer matches what was deployed.
       - The drift was corrected automatically.
       - A credential was issued, such as an agent certificate.
+      - The person signed in.
       x-enum-labels:
       - Create
       - Update
@@ -3795,6 +3798,7 @@ components:
       - Drift detected
       - Self-healed
       - Issue
+      - Sign in
       x-enum-varnames:
       - Create
       - Update
@@ -3814,6 +3818,7 @@ components:
       - DriftDetected
       - SelfHealed
       - Issue
+      - SignIn
     AuditActorType:
       enum:
       - User
@@ -3831,6 +3836,22 @@ components:
       x-enum-varnames:
       - User
       - APIKey
+    AuditDetailItem:
+      properties:
+        key:
+          description: The detail's key in details.
+          type: string
+        label:
+          description: What the detail is, in words, such as "Changed fields".
+          type: string
+        value:
+          description: The detail's value in words.
+          type: string
+      required:
+      - key
+      - label
+      - value
+      type: object
     AuditEvent:
       properties:
         action:
@@ -3844,6 +3865,12 @@ components:
         apiKeyId:
           description: The API key the actor used, when one was used
           type: string
+        detailItems:
+          description: 'The details as a person reads them: each with a label and
+            its value in words, sorted by label; details with no value are left out.'
+          items:
+            $ref: '#/components/schemas/AuditDetailItem'
+          type: array
         details:
           additionalProperties: true
           description: Contains additional event-specific information
@@ -3860,12 +3887,18 @@ components:
           description: The unique identifier for the audit event
           type: string
         ipAddress:
-          description: Of the user who performed the action
+          description: The address of the person who acted; empty when the request
+            reached the API through an internal hop (network Internal).
           type: string
         method:
           description: The HTTP method of the request that made the change, such as
             POST or DELETE
           type: string
+        network:
+          allOf:
+          - $ref: '#/components/schemas/AuditNetwork'
+          description: Whether the request came from outside AstroPulse or through
+            a hop inside it; absent on events recorded before it was.
         orgId:
           description: The organization ID where the event occurred
           type: string
@@ -4098,6 +4131,25 @@ components:
       x-enum-varnames:
       - CSV
       - JSON
+    AuditNetwork:
+      enum:
+      - External
+      - Internal
+      type: string
+      x-enum-comments:
+        External: From outside AstroPulse; ipAddress is the person's address.
+        Internal: Through a hop inside AstroPulse, such as the console's server, the
+          MCP server or a port-forward; no person's address is known.
+      x-enum-descriptions:
+      - From outside AstroPulse; ipAddress is the person's address.
+      - Through a hop inside AstroPulse, such as the console's server, the MCP server
+        or a port-forward; no person's address is known.
+      x-enum-labels:
+      - External
+      - Internal
+      x-enum-varnames:
+      - External
+      - Internal
     AuditSource:
       enum:
       - Console
@@ -4157,7 +4209,8 @@ components:
           description: The organization these statistics are for
           type: string
         period:
-          description: Indicates the time period for these statistics (7d, 30d, 90d)
+          description: The period counted up to now (7d, 30d or 90d); empty when the
+            request gave its own start or end date
           type: string
         topUsers:
           description: Lists the users with the most audit events
@@ -23437,7 +23490,7 @@ info:
     tools, and authorized automation.'
   termsOfService: https://astropulse.io/terms
   title: AstroPulse Platform API
-  version: v1.0.5
+  version: v1.0.6
   x-scalar-sdk-installation:
   - description: '```sh
 
@@ -27609,8 +27662,8 @@ paths:
         name: includeReads
         schema:
           type: boolean
-      - description: Case-insensitive text search over action, resource, resource
-          ID, actor name and email, source and IP address
+      - description: Case-insensitive text search over the summary, action, resource,
+          resource ID, actor name and email, source and IP address
         in: query
         name: q
         schema:
@@ -27766,8 +27819,8 @@ paths:
         name: includeReads
         schema:
           type: boolean
-      - description: Case-insensitive text search over action, resource, resource
-          ID, actor name and email, source and IP address
+      - description: Case-insensitive text search over the summary, action, resource,
+          resource ID, actor name and email, source and IP address
         in: query
         name: q
         schema:
@@ -27988,22 +28041,67 @@ paths:
         enterprise plan and admin role.
       operationId: getAuditStats
       parameters:
-      - description: 'The period the statistics cover: 7d, 30d or 90d'
+      - description: 'The period the statistics cover when startDate and endDate are
+          absent: 7d, 30d or 90d'
         in: query
         name: period
         schema:
           default: 30d
           type: string
+      - description: Only events of this type
+        in: query
+        name: eventType
+        schema:
+          $ref: '#/components/schemas/AuditEventType'
+      - description: Only events with this action
+        in: query
+        name: action
+        schema:
+          $ref: '#/components/schemas/AuditAction'
+      - description: Only events by this user ID
+        in: query
+        name: userId
+        schema:
+          type: string
+      - description: Only events on this resource ID (exact match)
+        in: query
+        name: resourceId
+        schema:
+          type: string
+      - description: true counts only dry runs
+        in: query
+        name: dryRun
+        schema:
+          type: boolean
       - description: true also counts dry runs; by default only real changes are counted
         in: query
         name: includeDryRuns
         schema:
           type: boolean
-      - description: true also counts recorded reads of sensitive data
+      - description: true also counts recorded reads of sensitive data; without it,
+          reads are counted only when action is Read
         in: query
         name: includeReads
         schema:
           type: boolean
+      - description: Case-insensitive text search over the summary, action, resource,
+          resource ID, actor name and email, source and IP address
+        in: query
+        name: q
+        schema:
+          type: string
+      - description: 'Start of the range: an instant or a date (from its start, UTC);
+          replaces period'
+        in: query
+        name: startDate
+        schema:
+          type: string
+      - description: 'End of the range: an instant or a date (through its end, UTC);
+          replaces period'
+        in: query
+        name: endDate
+        schema:
+          type: string
       responses:
         '200':
           content:
