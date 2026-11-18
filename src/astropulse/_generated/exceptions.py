@@ -3,11 +3,12 @@
     run scripts/generate.sh.
 """  # noqa: E501
 
-
 from typing import Any, Optional
 from typing_extensions import Self
 
-class OpenApiException(Exception):
+from astropulse._errors import AstroPulseError
+
+class OpenApiException(AstroPulseError):
     """The base exception class for all OpenAPIExceptions"""
 
 

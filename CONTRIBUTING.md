@@ -24,9 +24,11 @@ The API surface is generated from the platform's public OpenAPI document, which 
 under `docs/`. Never hand-edit either: change the API, regenerate, and review the result as a
 contract change.
 
-Two of the generator's templates are overridden in `templates/python/`, so that an enum value
-the API adds later parses instead of raising. Each is upstream's file for the pinned version
-with one change, described at its top: re-copy and re-apply them when the version changes.
+Four of the generator's templates are overridden in `templates/python/`. `model_enum` and
+`model_generic` make an enum value the API adds later parse instead of raising; `exceptions`
+bases every generated exception on `astropulse.AstroPulseError`; `partial_header` writes one
+fixed header. Each is upstream's file for the pinned version with the change described at its
+top: re-copy and re-apply them when the version changes.
 
 The hand-written layer is small and stays that way: `_client.py` (the client, its retry and
 timeout policy, and `wait_until_serving`), `_errors.py`, `__init__.py` and `_version.py`, plus the

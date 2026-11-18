@@ -1,13 +1,14 @@
 """The official Python SDK for the AstroPulse Platform API.
 
 The resources on :class:`Client` are generated from the platform's OpenAPI
-document. The exceptions come from two places: the generated client raises one
-per status -- :class:`NotFoundException` and its siblings, all of them
-:class:`ApiException` -- and this package raises :class:`DeploymentFailed` and
-:class:`WaitTimeout` while waiting for work the platform does asynchronously.
+document. Every exception the package raises is an :class:`AstroPulseError`:
+the generated client raises one per status -- :class:`NotFoundException` and its
+siblings, all of them :class:`ApiException` -- and this package raises
+:class:`DeploymentFailed` and :class:`WaitTimeout` while waiting for work the
+platform does asynchronously.
 
-Catch :class:`OpenApiException` to catch everything the client can raise,
-including the argument errors it checks before sending anything.
+Catch :class:`AstroPulseError` to catch everything the package can raise,
+including the argument errors the client checks before sending anything.
 
 ``__api_version__`` is the platform API version the package was generated
 from, and ``__version__`` follows it: 1.0.5 is generated from API v1.0.5, and
@@ -48,8 +49,9 @@ __all__ = [
     "IN_FLIGHT",
     "DEFAULT_RETRIES",
     "DEFAULT_TIMEOUT",
-    # raised by this package, while waiting
+    # the base of every error below
     "AstroPulseError",
+    # raised by this package, while waiting
     "DeploymentFailed",
     "WaitTimeout",
     # raised by the generated client, per status

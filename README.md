@@ -125,16 +125,20 @@ application name or the Hugging Face repository.
 ## Errors
 
 ```python
-from astropulse import NotFoundException, OpenApiException
+from astropulse import AstroPulseError, NotFoundException
 
 try:
     ap.applications.get_application("qwen-chat")
 except NotFoundException as error:
     print(error.data.code)      # NOT_FOUND: branch on this, not on the message
     print(error.data.trace_id)  # include this in a support request
-except OpenApiException as error:
-    print(error)                # anything else the client raises
+except AstroPulseError as error:
+    print(error)                # anything else the package raises
 ```
+
+Every exception the package raises derives from `AstroPulseError`: the per-status API errors
+(`ApiException` and its subclasses), the argument errors the client checks before sending, and
+`DeploymentFailed` and `WaitTimeout` from `wait_until_serving`.
 
 ## Configuration
 

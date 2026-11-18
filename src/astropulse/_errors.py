@@ -1,22 +1,30 @@
-"""What this package raises on its own behalf.
+"""The errors this package raises, under one base class.
 
-Everything the API itself refuses raises a generated exception --
-:class:`astropulse.NotFoundException` and its siblings, all of them
-:class:`astropulse.ApiException`. These are the two situations the API cannot
-report, because they are about waiting rather than about a request: a deploy
-that ended somewhere it cannot serve from, and one that never settled.
+:class:`AstroPulseError` is the base of everything the package raises. What the
+API refuses raises a generated exception -- :class:`astropulse.NotFoundException`
+and its siblings, all of them :class:`astropulse.ApiException` -- and those
+derive from it too, through the generator's exception template. The two defined
+here are the situations the API cannot report, because they are about waiting
+rather than about a request: a deploy that ended somewhere it cannot serve from,
+and one that never settled.
 
 They are ``TimeoutError`` and ``RuntimeError`` underneath, so code written
 against the previous release keeps catching them.
+
+The generated exceptions import this module while the package is still being
+imported, so it imports nothing from the generated code at run time.
 """
 
 from __future__ import annotations
 
-from ._generated.models.application_status import ApplicationStatus
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ._generated.models.application_status import ApplicationStatus
 
 
 class AstroPulseError(Exception):
-    """Anything this package raises that the API did not."""
+    """Anything this package raises: the base of every error below and of the API's."""
 
 
 class DeploymentFailed(AstroPulseError, RuntimeError):
