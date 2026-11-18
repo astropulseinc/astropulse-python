@@ -48,4 +48,58 @@ class ClusterInfrastructureItem(str, Enum):
         member._value_ = value
         return member
 
+    @property
+    def label(self) -> str | None:
+        """The display name the API document gives this value.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _LABELS.get(self._value_)
+
+    @property
+    def description(self) -> str | None:
+        """What this value means, as the API document describes it.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _DESCRIPTIONS.get(self._value_)
+
+    @classmethod
+    def label_for(cls, value: str) -> str | None:
+        """The display name of a value, or ``None`` for one this version does not list."""
+        return _LABELS.get(value)
+
+    @classmethod
+    def description_for(cls, value: str) -> str | None:
+        """What a value means, or ``None`` for one this version does not list."""
+        return _DESCRIPTIONS.get(value)
+
+
+
+# The API document lists the labels and descriptions in the order of the values,
+# which is also the order of the members above.
+_LABELS: dict[str, str] = dict(zip(
+    [member._value_ for member in ClusterInfrastructureItem],
+    [
+        "Control plane",
+        "NAT gateway",
+        "NAT data processing",
+        "Public IPv4 address",
+        "Load balancer",
+        "EKS Auto Mode management",
+        "Data transfer",
+    ],
+))
+_DESCRIPTIONS: dict[str, str] = dict(zip(
+    [member._value_ for member in ClusterInfrastructureItem],
+    [
+        "The cloud's hourly fee for the managed control plane.",
+        "A gateway that lets nodes on private subnets reach the internet, charged by the hour.",
+        "The charge per gigabyte of traffic the NAT gateways carry.",
+        "A public address the cluster's network holds, charged by the hour.",
+        "A load balancer in front of the control plane or the cluster's outbound traffic.",
+        "The fee EKS Auto Mode charges for each instance it runs.",
+        "Traffic out to the internet and between zones, charged per gigabyte.",
+    ],
+))
 

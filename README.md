@@ -184,6 +184,22 @@ The [examples](https://github.com/astropulseinc/astropulse-python/tree/main/exam
 [docs/](https://github.com/astropulseinc/astropulse-python/tree/main/docs). If you type-check your code, enable pydantic's mypy plugin
 (`plugins = ["pydantic.mypy"]`).
 
+## Enum values
+
+Every enum member carries the display name and meaning the API document publishes for it, so a
+client shows the platform's words instead of mapping codes itself:
+
+```python
+from astropulse.models import ApplicationStatus
+
+ApplicationStatus.Running.label                # "Running"
+ApplicationStatus.Running.description          # what the state means
+ApplicationStatus.label_for("DeleteFailed")    # the same lookup, from a raw value
+```
+
+The API can add enum values at any time. A value this version does not list still parses, keeping
+the string it was sent, and its `label` and `description` are `None`.
+
 ## Support
 
 - Documentation: [astropulse.io/docs](https://astropulse.io/docs)

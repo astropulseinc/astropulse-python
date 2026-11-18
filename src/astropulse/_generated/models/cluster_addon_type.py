@@ -53,4 +53,68 @@ class ClusterAddonType(str, Enum):
         member._value_ = value
         return member
 
+    @property
+    def label(self) -> str | None:
+        """The display name the API document gives this value.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _LABELS.get(self._value_)
+
+    @property
+    def description(self) -> str | None:
+        """What this value means, as the API document describes it.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _DESCRIPTIONS.get(self._value_)
+
+    @classmethod
+    def label_for(cls, value: str) -> str | None:
+        """The display name of a value, or ``None`` for one this version does not list."""
+        return _LABELS.get(value)
+
+    @classmethod
+    def description_for(cls, value: str) -> str | None:
+        """What a value means, or ``None`` for one this version does not list."""
+        return _DESCRIPTIONS.get(value)
+
+
+
+# The API document lists the labels and descriptions in the order of the values,
+# which is also the order of the members above.
+_LABELS: dict[str, str] = dict(zip(
+    [member._value_ for member in ClusterAddonType],
+    [
+        "Astro Agent",
+        "Ingress",
+        "DNS Automation",
+        "Node Autoscaling",
+        "Certificates",
+        "Cost Visibility",
+        "Vulnerability Scanning",
+        "Workload Autoscaling",
+        "Model Serving",
+        "Gateway",
+        "Workload Queueing",
+        "Accelerator Metrics",
+    ],
+))
+_DESCRIPTIONS: dict[str, str] = dict(zip(
+    [member._value_ for member in ClusterAddonType],
+    [
+        "Securely connects this cluster to AstroPulse. Required to manage it.",
+        "Routes outside traffic to your apps",
+        "Keeps DNS records in sync with your apps",
+        "Adds and removes nodes as demand changes",
+        "Issues and renews TLS certificates",
+        "Shows usage and cost per app",
+        "Finds known vulnerabilities in running images",
+        "Scales apps on demand, down to zero",
+        "Serves AI models on your cluster",
+        "Exposes model endpoints securely",
+        "Queues jobs fairly within quotas",
+        "Tracks GPU usage per app",
+    ],
+))
 

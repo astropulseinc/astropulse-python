@@ -4,18 +4,26 @@ The API document promises that new values can appear in enum-like fields at any
 time. A client that rejects one stops being able to read the resource at all, so
 every generated enum accepts a value it does not list, keeps the string it was
 given, and sends that string back unchanged.
+
+Each member also carries the display name and meaning the API document gives it
+(``label``, ``description``); a value it does not list has neither.
 """
 
 from __future__ import annotations
 
 import json
+from enum import Enum
+from typing import Any
 
 import pytest
 
+from astropulse import models
 from astropulse.models import (
     AgentCapabilityStatus,
+    AKSNetworkPlugin,
     Application,
     ApplicationStatus,
+    ModelAPIFormat,
     NotificationChannelType,
     NotificationSubscription,
 )
@@ -106,3 +114,56 @@ def test_assigning_an_unknown_value_is_accepted() -> None:
     app.status = UNKNOWN  # type: ignore[assignment]
 
     assert app.status is not None and app.status.value == UNKNOWN
+
+
+# Any: each generated enum has label and description; the Enum base does not.
+ENUMS: list[Any] = [
+    item
+    for item in (getattr(models, name) for name in models.__all__)
+    if isinstance(item, type) and issubclass(item, Enum)
+]
+
+
+def test_a_member_carries_the_label_and_description_from_the_document() -> None:
+    assert AKSNetworkPlugin.Azure.label == "Azure CNI"
+    assert AKSNetworkPlugin.Azure.description == (
+        "Pods get addresses from Azure's container networking."
+    )
+    assert AKSNetworkPlugin.None_.label == "None"
+    assert ApplicationStatus.DeleteFailed.label == "Delete failed"
+
+
+def test_a_label_is_looked_up_by_value() -> None:
+    assert ApplicationStatus.label_for("DeleteFailed") == "Delete failed"
+    assert ApplicationStatus.description_for("Running") == ApplicationStatus.Running.description
+    assert ApplicationStatus.label_for(UNKNOWN) is None
+    assert ApplicationStatus.description_for(UNKNOWN) is None
+
+
+def test_a_value_it_does_not_list_has_no_label_or_description() -> None:
+    status = ApplicationStatus(UNKNOWN)
+
+    assert status.label is None
+    assert status.description is None
+    assert status.value == UNKNOWN
+
+
+def test_the_label_tables_add_no_members() -> None:
+    assert [member.name for member in AKSNetworkPlugin] == ["Azure", "Kubenet", "None_"]
+
+
+def test_a_text_with_quotes_and_braces_survives_generation() -> None:
+    assert ModelAPIFormat.V2.description is not None
+    assert "`/v2/models/{name}/infer`" in ModelAPIFormat.V2.description
+    assert AKSNetworkPlugin.Azure.description is not None
+    assert "Azure's" in AKSNetworkPlugin.Azure.description
+
+
+def test_every_listed_member_has_a_label_and_a_description() -> None:
+    assert ENUMS
+    for enum in ENUMS:
+        for member in enum:
+            # Every enum in the document publishes both today; a gap shows up
+            # here, on the regeneration PR that brings it in.
+            assert member.label, f"{enum.__name__}.{member.name} has no label"
+            assert member.description, f"{enum.__name__}.{member.name} has no meaning"

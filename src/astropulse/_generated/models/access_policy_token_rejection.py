@@ -53,4 +53,68 @@ class AccessPolicyTokenRejection(str, Enum):
         member._value_ = value
         return member
 
+    @property
+    def label(self) -> str | None:
+        """The display name the API document gives this value.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _LABELS.get(self._value_)
+
+    @property
+    def description(self) -> str | None:
+        """What this value means, as the API document describes it.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _DESCRIPTIONS.get(self._value_)
+
+    @classmethod
+    def label_for(cls, value: str) -> str | None:
+        """The display name of a value, or ``None`` for one this version does not list."""
+        return _LABELS.get(value)
+
+    @classmethod
+    def description_for(cls, value: str) -> str | None:
+        """What a value means, or ``None`` for one this version does not list."""
+        return _DESCRIPTIONS.get(value)
+
+
+
+# The API document lists the labels and descriptions in the order of the values,
+# which is also the order of the members above.
+_LABELS: dict[str, str] = dict(zip(
+    [member._value_ for member in AccessPolicyTokenRejection],
+    [
+        "Malformed token",
+        "Unknown signing key",
+        "Bad signature",
+        "Wrong issuer",
+        "Wrong audience",
+        "Expired",
+        "Not yet valid",
+        "Missing claim",
+        "Claim value not accepted",
+        "Claim of another type",
+        "Key set unusable",
+        "Provider unreachable",
+    ],
+))
+_DESCRIPTIONS: dict[str, str] = dict(zip(
+    [member._value_ for member in AccessPolicyTokenRejection],
+    [
+        "The token is not a signed JWT an endpoint accepts.",
+        "No key in the provider's key set has the token's key ID.",
+        "The signature does not verify with the provider's key.",
+        "The token was issued by a provider the policy does not accept.",
+        "The token's audience includes none of the policy's audiences.",
+        "The token has expired.",
+        "The token is not valid until a later time.",
+        "The token lacks a claim the policy requires.",
+        "A required claim holds none of the accepted values.",
+        "A required claim is not the type the policy reads it as.",
+        "The provider's key set could not be used to check the token.",
+        "The identity provider's key set could not be reached.",
+    ],
+))
 

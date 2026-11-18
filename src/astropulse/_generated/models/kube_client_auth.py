@@ -48,4 +48,58 @@ class KubeClientAuth(str, Enum):
         member._value_ = value
         return member
 
+    @property
+    def label(self) -> str | None:
+        """The display name the API document gives this value.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _LABELS.get(self._value_)
+
+    @property
+    def description(self) -> str | None:
+        """What this value means, as the API document describes it.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _DESCRIPTIONS.get(self._value_)
+
+    @classmethod
+    def label_for(cls, value: str) -> str | None:
+        """The display name of a value, or ``None`` for one this version does not list."""
+        return _LABELS.get(value)
+
+    @classmethod
+    def description_for(cls, value: str) -> str | None:
+        """What a value means, or ``None`` for one this version does not list."""
+        return _DESCRIPTIONS.get(value)
+
+
+
+# The API document lists the labels and descriptions in the order of the values,
+# which is also the order of the members above.
+_LABELS: dict[str, str] = dict(zip(
+    [member._value_ for member in KubeClientAuth],
+    [
+        "Client certificate",
+        "Bearer token",
+        "AWS IAM",
+        "OIDC",
+        "Google Cloud",
+        "Microsoft Entra ID",
+        "AstroPulse agent",
+    ],
+))
+_DESCRIPTIONS: dict[str, str] = dict(zip(
+    [member._value_ for member in KubeClientAuth],
+    [
+        "Signs in with an X.509 client certificate.",
+        "Signs in with a bearer token.",
+        "Signs in with an AWS IAM identity.",
+        "Signs in with an OpenID Connect token.",
+        "Signs in with a Google Cloud identity.",
+        "Signs in with a Microsoft Entra ID identity.",
+        "Reaches the cluster through its AstroPulse agent.",
+    ],
+))
 

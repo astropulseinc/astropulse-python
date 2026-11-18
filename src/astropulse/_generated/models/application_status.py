@@ -50,4 +50,62 @@ class ApplicationStatus(str, Enum):
         member._value_ = value
         return member
 
+    @property
+    def label(self) -> str | None:
+        """The display name the API document gives this value.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _LABELS.get(self._value_)
+
+    @property
+    def description(self) -> str | None:
+        """What this value means, as the API document describes it.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _DESCRIPTIONS.get(self._value_)
+
+    @classmethod
+    def label_for(cls, value: str) -> str | None:
+        """The display name of a value, or ``None`` for one this version does not list."""
+        return _LABELS.get(value)
+
+    @classmethod
+    def description_for(cls, value: str) -> str | None:
+        """What a value means, or ``None`` for one this version does not list."""
+        return _DESCRIPTIONS.get(value)
+
+
+
+# The API document lists the labels and descriptions in the order of the values,
+# which is also the order of the members above.
+_LABELS: dict[str, str] = dict(zip(
+    [member._value_ for member in ApplicationStatus],
+    [
+        "Provisioning",
+        "In progress",
+        "Running",
+        "Failed",
+        "Not found",
+        "Canceled",
+        "Completed",
+        "Deleting",
+        "Delete failed",
+    ],
+))
+_DESCRIPTIONS: dict[str, str] = dict(zip(
+    [member._value_ for member in ApplicationStatus],
+    [
+        "AstroPulse is preparing the deployment.",
+        "The deployment is in progress.",
+        "The application is running and healthy.",
+        "The deployment failed.",
+        "No deployment of the application was found.",
+        "The deployment was canceled.",
+        "The deployment completed.",
+        "The application is being deleted.",
+        "Deleting the application failed.",
+    ],
+))
 

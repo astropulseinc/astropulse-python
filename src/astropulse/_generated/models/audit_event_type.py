@@ -62,4 +62,86 @@ class AuditEventType(str, Enum):
         member._value_ = value
         return member
 
+    @property
+    def label(self) -> str | None:
+        """The display name the API document gives this value.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _LABELS.get(self._value_)
+
+    @property
+    def description(self) -> str | None:
+        """What this value means, as the API document describes it.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _DESCRIPTIONS.get(self._value_)
+
+    @classmethod
+    def label_for(cls, value: str) -> str | None:
+        """The display name of a value, or ``None`` for one this version does not list."""
+        return _LABELS.get(value)
+
+    @classmethod
+    def description_for(cls, value: str) -> str | None:
+        """What a value means, or ``None`` for one this version does not list."""
+        return _DESCRIPTIONS.get(value)
+
+
+
+# The API document lists the labels and descriptions in the order of the values,
+# which is also the order of the members above.
+_LABELS: dict[str, str] = dict(zip(
+    [member._value_ for member in AuditEventType],
+    [
+        "API key",
+        "Cluster",
+        "Application",
+        "Application profile",
+        "Organization",
+        "User",
+        "Cloud provider",
+        "Audit log",
+        "Notification",
+        "Credential",
+        "Domain",
+        "Platform",
+        "Request",
+        "Add-on",
+        "Access policy",
+        "Exposure",
+        "Storage",
+        "Member",
+        "Service account",
+        "Integration",
+        "Domain binding",
+    ],
+))
+_DESCRIPTIONS: dict[str, str] = dict(zip(
+    [member._value_ for member in AuditEventType],
+    [
+        "A personal or service account API key.",
+        "A Kubernetes cluster.",
+        "An application deployed to a cluster.",
+        "A reusable application profile.",
+        "The organization itself.",
+        "A user account.",
+        "A cloud provider connection.",
+        "The audit log, read or exported.",
+        "A notification subscription or integration.",
+        "A stored credential.",
+        "A domain the organization owns.",
+        "An AstroPulse-wide setting.",
+        "A request that named no resource.",
+        "An add-on of a cluster.",
+        "An access policy for model endpoints.",
+        "Who can reach a cluster's endpoints.",
+        "A cluster's storage.",
+        "A member of the organization.",
+        "A service account of the organization.",
+        "A connected service, such as GitHub or Hugging Face.",
+        "A domain bound to a cluster.",
+    ],
+))
 
