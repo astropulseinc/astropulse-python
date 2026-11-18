@@ -144,12 +144,14 @@ from astropulse._generated.models.attempt_status import AttemptStatus
 from astropulse._generated.models.attempt_status_info import AttemptStatusInfo
 from astropulse._generated.models.audit_action import AuditAction
 from astropulse._generated.models.audit_actor_type import AuditActorType
+from astropulse._generated.models.audit_detail_item import AuditDetailItem
 from astropulse._generated.models.audit_event import AuditEvent
 from astropulse._generated.models.audit_event_list import AuditEventList
 from astropulse._generated.models.audit_event_list_response import AuditEventListResponse
 from astropulse._generated.models.audit_event_response import AuditEventResponse
 from astropulse._generated.models.audit_event_type import AuditEventType
 from astropulse._generated.models.audit_export_format import AuditExportFormat
+from astropulse._generated.models.audit_network import AuditNetwork
 from astropulse._generated.models.audit_source import AuditSource
 from astropulse._generated.models.audit_stats import AuditStats
 from astropulse._generated.models.audit_stats_response import AuditStatsResponse

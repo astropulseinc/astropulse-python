@@ -47,7 +47,7 @@ class AuditApi:
         dry_run: Annotated[Optional[StrictBool], Field(description="true lists only dry runs, requests that checked a change and made none")] = None,
         include_dry_runs: Annotated[Optional[StrictBool], Field(description="true lists dry runs alongside real changes; without it or dryRun, only real changes are listed")] = None,
         include_reads: Annotated[Optional[StrictBool], Field(description="true lists recorded reads of sensitive data, such as of this log; without it, reads are listed only when action is Read")] = None,
-        q: Annotated[Optional[StrictStr], Field(description="Case-insensitive text search over action, resource, resource ID, actor name and email, source and IP address")] = None,
+        q: Annotated[Optional[StrictStr], Field(description="Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address")] = None,
         start_date: Annotated[Optional[StrictStr], Field(description="Start of the range: an instant (2024-01-15T10:30:00Z) or a date (2024-01-15, from its start, UTC). Alone, the range runs to now.")] = None,
         end_date: Annotated[Optional[StrictStr], Field(description="End of the range: an instant (2024-01-16T23:59:59Z) or a date (2024-01-16, through its end, UTC). Alone, the range reaches back 30 days.")] = None,
         _request_timeout: Union[
@@ -83,7 +83,7 @@ class AuditApi:
         :type include_dry_runs: bool
         :param include_reads: true lists recorded reads of sensitive data, such as of this log; without it, reads are listed only when action is Read
         :type include_reads: bool
-        :param q: Case-insensitive text search over action, resource, resource ID, actor name and email, source and IP address
+        :param q: Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address
         :type q: str
         :param start_date: Start of the range: an instant (2024-01-15T10:30:00Z) or a date (2024-01-15, from its start, UTC). Alone, the range runs to now.
         :type start_date: str
@@ -160,7 +160,7 @@ class AuditApi:
         dry_run: Annotated[Optional[StrictBool], Field(description="true lists only dry runs, requests that checked a change and made none")] = None,
         include_dry_runs: Annotated[Optional[StrictBool], Field(description="true lists dry runs alongside real changes; without it or dryRun, only real changes are listed")] = None,
         include_reads: Annotated[Optional[StrictBool], Field(description="true lists recorded reads of sensitive data, such as of this log; without it, reads are listed only when action is Read")] = None,
-        q: Annotated[Optional[StrictStr], Field(description="Case-insensitive text search over action, resource, resource ID, actor name and email, source and IP address")] = None,
+        q: Annotated[Optional[StrictStr], Field(description="Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address")] = None,
         start_date: Annotated[Optional[StrictStr], Field(description="Start of the range: an instant (2024-01-15T10:30:00Z) or a date (2024-01-15, from its start, UTC). Alone, the range runs to now.")] = None,
         end_date: Annotated[Optional[StrictStr], Field(description="End of the range: an instant (2024-01-16T23:59:59Z) or a date (2024-01-16, through its end, UTC). Alone, the range reaches back 30 days.")] = None,
         _request_timeout: Union[
@@ -196,7 +196,7 @@ class AuditApi:
         :type include_dry_runs: bool
         :param include_reads: true lists recorded reads of sensitive data, such as of this log; without it, reads are listed only when action is Read
         :type include_reads: bool
-        :param q: Case-insensitive text search over action, resource, resource ID, actor name and email, source and IP address
+        :param q: Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address
         :type q: str
         :param start_date: Start of the range: an instant (2024-01-15T10:30:00Z) or a date (2024-01-15, from its start, UTC). Alone, the range runs to now.
         :type start_date: str
@@ -273,7 +273,7 @@ class AuditApi:
         dry_run: Annotated[Optional[StrictBool], Field(description="true lists only dry runs, requests that checked a change and made none")] = None,
         include_dry_runs: Annotated[Optional[StrictBool], Field(description="true lists dry runs alongside real changes; without it or dryRun, only real changes are listed")] = None,
         include_reads: Annotated[Optional[StrictBool], Field(description="true lists recorded reads of sensitive data, such as of this log; without it, reads are listed only when action is Read")] = None,
-        q: Annotated[Optional[StrictStr], Field(description="Case-insensitive text search over action, resource, resource ID, actor name and email, source and IP address")] = None,
+        q: Annotated[Optional[StrictStr], Field(description="Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address")] = None,
         start_date: Annotated[Optional[StrictStr], Field(description="Start of the range: an instant (2024-01-15T10:30:00Z) or a date (2024-01-15, from its start, UTC). Alone, the range runs to now.")] = None,
         end_date: Annotated[Optional[StrictStr], Field(description="End of the range: an instant (2024-01-16T23:59:59Z) or a date (2024-01-16, through its end, UTC). Alone, the range reaches back 30 days.")] = None,
         _request_timeout: Union[
@@ -309,7 +309,7 @@ class AuditApi:
         :type include_dry_runs: bool
         :param include_reads: true lists recorded reads of sensitive data, such as of this log; without it, reads are listed only when action is Read
         :type include_reads: bool
-        :param q: Case-insensitive text search over action, resource, resource ID, actor name and email, source and IP address
+        :param q: Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address
         :type q: str
         :param start_date: Start of the range: an instant (2024-01-15T10:30:00Z) or a date (2024-01-15, from its start, UTC). Alone, the range runs to now.
         :type start_date: str
@@ -775,9 +775,17 @@ class AuditApi:
     @validate_call
     def get_audit_stats(
         self,
-        period: Annotated[Optional[StrictStr], Field(description="The period the statistics cover: 7d, 30d or 90d")] = None,
+        period: Annotated[Optional[StrictStr], Field(description="The period the statistics cover when startDate and endDate are absent: 7d, 30d or 90d")] = None,
+        event_type: Annotated[Optional[AuditEventType], Field(description="Only events of this type")] = None,
+        action: Annotated[Optional[AuditAction], Field(description="Only events with this action")] = None,
+        user_id: Annotated[Optional[StrictStr], Field(description="Only events by this user ID")] = None,
+        resource_id: Annotated[Optional[StrictStr], Field(description="Only events on this resource ID (exact match)")] = None,
+        dry_run: Annotated[Optional[StrictBool], Field(description="true counts only dry runs")] = None,
         include_dry_runs: Annotated[Optional[StrictBool], Field(description="true also counts dry runs; by default only real changes are counted")] = None,
-        include_reads: Annotated[Optional[StrictBool], Field(description="true also counts recorded reads of sensitive data")] = None,
+        include_reads: Annotated[Optional[StrictBool], Field(description="true also counts recorded reads of sensitive data; without it, reads are counted only when action is Read")] = None,
+        q: Annotated[Optional[StrictStr], Field(description="Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address")] = None,
+        start_date: Annotated[Optional[StrictStr], Field(description="Start of the range: an instant or a date (from its start, UTC); replaces period")] = None,
+        end_date: Annotated[Optional[StrictStr], Field(description="End of the range: an instant or a date (through its end, UTC); replaces period")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -795,12 +803,28 @@ class AuditApi:
 
         Get audit statistics and analytics for an organization. Requires enterprise plan and admin role.
 
-        :param period: The period the statistics cover: 7d, 30d or 90d
+        :param period: The period the statistics cover when startDate and endDate are absent: 7d, 30d or 90d
         :type period: str
+        :param event_type: Only events of this type
+        :type event_type: AuditEventType
+        :param action: Only events with this action
+        :type action: AuditAction
+        :param user_id: Only events by this user ID
+        :type user_id: str
+        :param resource_id: Only events on this resource ID (exact match)
+        :type resource_id: str
+        :param dry_run: true counts only dry runs
+        :type dry_run: bool
         :param include_dry_runs: true also counts dry runs; by default only real changes are counted
         :type include_dry_runs: bool
-        :param include_reads: true also counts recorded reads of sensitive data
+        :param include_reads: true also counts recorded reads of sensitive data; without it, reads are counted only when action is Read
         :type include_reads: bool
+        :param q: Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address
+        :type q: str
+        :param start_date: Start of the range: an instant or a date (from its start, UTC); replaces period
+        :type start_date: str
+        :param end_date: End of the range: an instant or a date (through its end, UTC); replaces period
+        :type end_date: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -825,8 +849,16 @@ class AuditApi:
 
         _param = self._get_audit_stats_serialize(
             period=period,
+            event_type=event_type,
+            action=action,
+            user_id=user_id,
+            resource_id=resource_id,
+            dry_run=dry_run,
             include_dry_runs=include_dry_runs,
             include_reads=include_reads,
+            q=q,
+            start_date=start_date,
+            end_date=end_date,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -856,9 +888,17 @@ class AuditApi:
     @validate_call
     def get_audit_stats_with_http_info(
         self,
-        period: Annotated[Optional[StrictStr], Field(description="The period the statistics cover: 7d, 30d or 90d")] = None,
+        period: Annotated[Optional[StrictStr], Field(description="The period the statistics cover when startDate and endDate are absent: 7d, 30d or 90d")] = None,
+        event_type: Annotated[Optional[AuditEventType], Field(description="Only events of this type")] = None,
+        action: Annotated[Optional[AuditAction], Field(description="Only events with this action")] = None,
+        user_id: Annotated[Optional[StrictStr], Field(description="Only events by this user ID")] = None,
+        resource_id: Annotated[Optional[StrictStr], Field(description="Only events on this resource ID (exact match)")] = None,
+        dry_run: Annotated[Optional[StrictBool], Field(description="true counts only dry runs")] = None,
         include_dry_runs: Annotated[Optional[StrictBool], Field(description="true also counts dry runs; by default only real changes are counted")] = None,
-        include_reads: Annotated[Optional[StrictBool], Field(description="true also counts recorded reads of sensitive data")] = None,
+        include_reads: Annotated[Optional[StrictBool], Field(description="true also counts recorded reads of sensitive data; without it, reads are counted only when action is Read")] = None,
+        q: Annotated[Optional[StrictStr], Field(description="Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address")] = None,
+        start_date: Annotated[Optional[StrictStr], Field(description="Start of the range: an instant or a date (from its start, UTC); replaces period")] = None,
+        end_date: Annotated[Optional[StrictStr], Field(description="End of the range: an instant or a date (through its end, UTC); replaces period")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -876,12 +916,28 @@ class AuditApi:
 
         Get audit statistics and analytics for an organization. Requires enterprise plan and admin role.
 
-        :param period: The period the statistics cover: 7d, 30d or 90d
+        :param period: The period the statistics cover when startDate and endDate are absent: 7d, 30d or 90d
         :type period: str
+        :param event_type: Only events of this type
+        :type event_type: AuditEventType
+        :param action: Only events with this action
+        :type action: AuditAction
+        :param user_id: Only events by this user ID
+        :type user_id: str
+        :param resource_id: Only events on this resource ID (exact match)
+        :type resource_id: str
+        :param dry_run: true counts only dry runs
+        :type dry_run: bool
         :param include_dry_runs: true also counts dry runs; by default only real changes are counted
         :type include_dry_runs: bool
-        :param include_reads: true also counts recorded reads of sensitive data
+        :param include_reads: true also counts recorded reads of sensitive data; without it, reads are counted only when action is Read
         :type include_reads: bool
+        :param q: Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address
+        :type q: str
+        :param start_date: Start of the range: an instant or a date (from its start, UTC); replaces period
+        :type start_date: str
+        :param end_date: End of the range: an instant or a date (through its end, UTC); replaces period
+        :type end_date: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -906,8 +962,16 @@ class AuditApi:
 
         _param = self._get_audit_stats_serialize(
             period=period,
+            event_type=event_type,
+            action=action,
+            user_id=user_id,
+            resource_id=resource_id,
+            dry_run=dry_run,
             include_dry_runs=include_dry_runs,
             include_reads=include_reads,
+            q=q,
+            start_date=start_date,
+            end_date=end_date,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -937,9 +1001,17 @@ class AuditApi:
     @validate_call
     def get_audit_stats_without_preload_content(
         self,
-        period: Annotated[Optional[StrictStr], Field(description="The period the statistics cover: 7d, 30d or 90d")] = None,
+        period: Annotated[Optional[StrictStr], Field(description="The period the statistics cover when startDate and endDate are absent: 7d, 30d or 90d")] = None,
+        event_type: Annotated[Optional[AuditEventType], Field(description="Only events of this type")] = None,
+        action: Annotated[Optional[AuditAction], Field(description="Only events with this action")] = None,
+        user_id: Annotated[Optional[StrictStr], Field(description="Only events by this user ID")] = None,
+        resource_id: Annotated[Optional[StrictStr], Field(description="Only events on this resource ID (exact match)")] = None,
+        dry_run: Annotated[Optional[StrictBool], Field(description="true counts only dry runs")] = None,
         include_dry_runs: Annotated[Optional[StrictBool], Field(description="true also counts dry runs; by default only real changes are counted")] = None,
-        include_reads: Annotated[Optional[StrictBool], Field(description="true also counts recorded reads of sensitive data")] = None,
+        include_reads: Annotated[Optional[StrictBool], Field(description="true also counts recorded reads of sensitive data; without it, reads are counted only when action is Read")] = None,
+        q: Annotated[Optional[StrictStr], Field(description="Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address")] = None,
+        start_date: Annotated[Optional[StrictStr], Field(description="Start of the range: an instant or a date (from its start, UTC); replaces period")] = None,
+        end_date: Annotated[Optional[StrictStr], Field(description="End of the range: an instant or a date (through its end, UTC); replaces period")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -957,12 +1029,28 @@ class AuditApi:
 
         Get audit statistics and analytics for an organization. Requires enterprise plan and admin role.
 
-        :param period: The period the statistics cover: 7d, 30d or 90d
+        :param period: The period the statistics cover when startDate and endDate are absent: 7d, 30d or 90d
         :type period: str
+        :param event_type: Only events of this type
+        :type event_type: AuditEventType
+        :param action: Only events with this action
+        :type action: AuditAction
+        :param user_id: Only events by this user ID
+        :type user_id: str
+        :param resource_id: Only events on this resource ID (exact match)
+        :type resource_id: str
+        :param dry_run: true counts only dry runs
+        :type dry_run: bool
         :param include_dry_runs: true also counts dry runs; by default only real changes are counted
         :type include_dry_runs: bool
-        :param include_reads: true also counts recorded reads of sensitive data
+        :param include_reads: true also counts recorded reads of sensitive data; without it, reads are counted only when action is Read
         :type include_reads: bool
+        :param q: Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address
+        :type q: str
+        :param start_date: Start of the range: an instant or a date (from its start, UTC); replaces period
+        :type start_date: str
+        :param end_date: End of the range: an instant or a date (through its end, UTC); replaces period
+        :type end_date: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -987,8 +1075,16 @@ class AuditApi:
 
         _param = self._get_audit_stats_serialize(
             period=period,
+            event_type=event_type,
+            action=action,
+            user_id=user_id,
+            resource_id=resource_id,
+            dry_run=dry_run,
             include_dry_runs=include_dry_runs,
             include_reads=include_reads,
+            q=q,
+            start_date=start_date,
+            end_date=end_date,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1014,8 +1110,16 @@ class AuditApi:
     def _get_audit_stats_serialize(
         self,
         period,
+        event_type,
+        action,
+        user_id,
+        resource_id,
+        dry_run,
         include_dry_runs,
         include_reads,
+        q,
+        start_date,
+        end_date,
         _request_auth,
         _content_type,
         _headers,
@@ -1042,6 +1146,26 @@ class AuditApi:
             
             _query_params.append(('period', period))
             
+        if event_type is not None:
+            
+            _query_params.append(('eventType', event_type.value))
+            
+        if action is not None:
+            
+            _query_params.append(('action', action.value))
+            
+        if user_id is not None:
+            
+            _query_params.append(('userId', user_id))
+            
+        if resource_id is not None:
+            
+            _query_params.append(('resourceId', resource_id))
+            
+        if dry_run is not None:
+            
+            _query_params.append(('dryRun', dry_run))
+            
         if include_dry_runs is not None:
             
             _query_params.append(('includeDryRuns', include_dry_runs))
@@ -1049,6 +1173,18 @@ class AuditApi:
         if include_reads is not None:
             
             _query_params.append(('includeReads', include_reads))
+            
+        if q is not None:
+            
+            _query_params.append(('q', q))
+            
+        if start_date is not None:
+            
+            _query_params.append(('startDate', start_date))
+            
+        if end_date is not None:
+            
+            _query_params.append(('endDate', end_date))
             
         # process the header parameters
         # process the form parameters
@@ -1102,7 +1238,7 @@ class AuditApi:
         dry_run: Annotated[Optional[StrictBool], Field(description="true lists only dry runs, requests that checked a change and made none")] = None,
         include_dry_runs: Annotated[Optional[StrictBool], Field(description="true lists dry runs alongside real changes; without it or dryRun, only real changes are listed")] = None,
         include_reads: Annotated[Optional[StrictBool], Field(description="true lists recorded reads of sensitive data, such as of this log; without it, reads are listed only when action is Read")] = None,
-        q: Annotated[Optional[StrictStr], Field(description="Case-insensitive text search over action, resource, resource ID, actor name and email, source and IP address")] = None,
+        q: Annotated[Optional[StrictStr], Field(description="Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address")] = None,
         start_date: Annotated[Optional[StrictStr], Field(description="Start of the range: an instant (2024-01-15T10:30:00Z) or a date (2024-01-15, from its start, UTC). Alone, the range runs to now.")] = None,
         end_date: Annotated[Optional[StrictStr], Field(description="End of the range: an instant (2024-01-16T23:59:59Z) or a date (2024-01-16, through its end, UTC). Alone, the range reaches back 30 days.")] = None,
         _request_timeout: Union[
@@ -1144,7 +1280,7 @@ class AuditApi:
         :type include_dry_runs: bool
         :param include_reads: true lists recorded reads of sensitive data, such as of this log; without it, reads are listed only when action is Read
         :type include_reads: bool
-        :param q: Case-insensitive text search over action, resource, resource ID, actor name and email, source and IP address
+        :param q: Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address
         :type q: str
         :param start_date: Start of the range: an instant (2024-01-15T10:30:00Z) or a date (2024-01-15, from its start, UTC). Alone, the range runs to now.
         :type start_date: str
@@ -1227,7 +1363,7 @@ class AuditApi:
         dry_run: Annotated[Optional[StrictBool], Field(description="true lists only dry runs, requests that checked a change and made none")] = None,
         include_dry_runs: Annotated[Optional[StrictBool], Field(description="true lists dry runs alongside real changes; without it or dryRun, only real changes are listed")] = None,
         include_reads: Annotated[Optional[StrictBool], Field(description="true lists recorded reads of sensitive data, such as of this log; without it, reads are listed only when action is Read")] = None,
-        q: Annotated[Optional[StrictStr], Field(description="Case-insensitive text search over action, resource, resource ID, actor name and email, source and IP address")] = None,
+        q: Annotated[Optional[StrictStr], Field(description="Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address")] = None,
         start_date: Annotated[Optional[StrictStr], Field(description="Start of the range: an instant (2024-01-15T10:30:00Z) or a date (2024-01-15, from its start, UTC). Alone, the range runs to now.")] = None,
         end_date: Annotated[Optional[StrictStr], Field(description="End of the range: an instant (2024-01-16T23:59:59Z) or a date (2024-01-16, through its end, UTC). Alone, the range reaches back 30 days.")] = None,
         _request_timeout: Union[
@@ -1269,7 +1405,7 @@ class AuditApi:
         :type include_dry_runs: bool
         :param include_reads: true lists recorded reads of sensitive data, such as of this log; without it, reads are listed only when action is Read
         :type include_reads: bool
-        :param q: Case-insensitive text search over action, resource, resource ID, actor name and email, source and IP address
+        :param q: Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address
         :type q: str
         :param start_date: Start of the range: an instant (2024-01-15T10:30:00Z) or a date (2024-01-15, from its start, UTC). Alone, the range runs to now.
         :type start_date: str
@@ -1352,7 +1488,7 @@ class AuditApi:
         dry_run: Annotated[Optional[StrictBool], Field(description="true lists only dry runs, requests that checked a change and made none")] = None,
         include_dry_runs: Annotated[Optional[StrictBool], Field(description="true lists dry runs alongside real changes; without it or dryRun, only real changes are listed")] = None,
         include_reads: Annotated[Optional[StrictBool], Field(description="true lists recorded reads of sensitive data, such as of this log; without it, reads are listed only when action is Read")] = None,
-        q: Annotated[Optional[StrictStr], Field(description="Case-insensitive text search over action, resource, resource ID, actor name and email, source and IP address")] = None,
+        q: Annotated[Optional[StrictStr], Field(description="Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address")] = None,
         start_date: Annotated[Optional[StrictStr], Field(description="Start of the range: an instant (2024-01-15T10:30:00Z) or a date (2024-01-15, from its start, UTC). Alone, the range runs to now.")] = None,
         end_date: Annotated[Optional[StrictStr], Field(description="End of the range: an instant (2024-01-16T23:59:59Z) or a date (2024-01-16, through its end, UTC). Alone, the range reaches back 30 days.")] = None,
         _request_timeout: Union[
@@ -1394,7 +1530,7 @@ class AuditApi:
         :type include_dry_runs: bool
         :param include_reads: true lists recorded reads of sensitive data, such as of this log; without it, reads are listed only when action is Read
         :type include_reads: bool
-        :param q: Case-insensitive text search over action, resource, resource ID, actor name and email, source and IP address
+        :param q: Case-insensitive text search over the summary, action, resource, resource ID, actor name and email, source and IP address
         :type q: str
         :param start_date: Start of the range: an instant (2024-01-15T10:30:00Z) or a date (2024-01-15, from its start, UTC). Alone, the range runs to now.
         :type start_date: str

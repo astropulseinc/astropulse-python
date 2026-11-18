@@ -176,12 +176,14 @@ __all__ = [
     "AttemptStatusInfo",
     "AuditAction",
     "AuditActorType",
+    "AuditDetailItem",
     "AuditEvent",
     "AuditEventList",
     "AuditEventListResponse",
     "AuditEventResponse",
     "AuditEventType",
     "AuditExportFormat",
+    "AuditNetwork",
     "AuditSource",
     "AuditStats",
     "AuditStatsResponse",
@@ -957,12 +959,14 @@ from astropulse._generated.models.attempt_status import AttemptStatus as Attempt
 from astropulse._generated.models.attempt_status_info import AttemptStatusInfo as AttemptStatusInfo
 from astropulse._generated.models.audit_action import AuditAction as AuditAction
 from astropulse._generated.models.audit_actor_type import AuditActorType as AuditActorType
+from astropulse._generated.models.audit_detail_item import AuditDetailItem as AuditDetailItem
 from astropulse._generated.models.audit_event import AuditEvent as AuditEvent
 from astropulse._generated.models.audit_event_list import AuditEventList as AuditEventList
 from astropulse._generated.models.audit_event_list_response import AuditEventListResponse as AuditEventListResponse
 from astropulse._generated.models.audit_event_response import AuditEventResponse as AuditEventResponse
 from astropulse._generated.models.audit_event_type import AuditEventType as AuditEventType
 from astropulse._generated.models.audit_export_format import AuditExportFormat as AuditExportFormat
+from astropulse._generated.models.audit_network import AuditNetwork as AuditNetwork
 from astropulse._generated.models.audit_source import AuditSource as AuditSource
 from astropulse._generated.models.audit_stats import AuditStats as AuditStats
 from astropulse._generated.models.audit_stats_response import AuditStatsResponse as AuditStatsResponse

@@ -16,7 +16,9 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, Strict
 from typing import Any, ClassVar, Dict, List, Optional
 from astropulse._generated.models.audit_action import AuditAction
 from astropulse._generated.models.audit_actor_type import AuditActorType
+from astropulse._generated.models.audit_detail_item import AuditDetailItem
 from astropulse._generated.models.audit_event_type import AuditEventType
+from astropulse._generated.models.audit_network import AuditNetwork
 from astropulse._generated.models.audit_source import AuditSource
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,12 +31,14 @@ class AuditEvent(BaseModel):
     action: Optional[AuditAction] = Field(default=None, description="What was done to the resource, or for a dry run what was checked.")
     actor_type: Optional[AuditActorType] = Field(default=None, description="How the actor signed in.", alias="actorType")
     api_key_id: Optional[StrictStr] = Field(default=None, description="The API key the actor used, when one was used", alias="apiKeyId")
+    detail_items: Optional[List[AuditDetailItem]] = Field(default=None, description="The details as a person reads them: each with a label and its value in words, sorted by label; details with no value are left out.", alias="detailItems")
     details: Optional[Dict[str, Any]] = Field(default=None, description="Contains additional event-specific information")
     dry_run: Optional[StrictBool] = Field(default=None, description="True when the request only checked the action and changed nothing", alias="dryRun")
     event_type: Optional[AuditEventType] = Field(default=None, description="The kind of resource the event is about, such as Cluster or Addon; Request when the request named none.", alias="eventType")
     id: Optional[StrictStr] = Field(default=None, description="The unique identifier for the audit event")
-    ip_address: Optional[StrictStr] = Field(default=None, description="Of the user who performed the action", alias="ipAddress")
+    ip_address: Optional[StrictStr] = Field(default=None, description="The address of the person who acted; empty when the request reached the API through an internal hop (network Internal).", alias="ipAddress")
     method: Optional[StrictStr] = Field(default=None, description="The HTTP method of the request that made the change, such as POST or DELETE")
+    network: Optional[AuditNetwork] = Field(default=None, description="Whether the request came from outside AstroPulse or through a hop inside it; absent on events recorded before it was.")
     org_id: Optional[StrictStr] = Field(default=None, description="The organization ID where the event occurred", alias="orgId")
     reason: Optional[StrictStr] = Field(default=None, description="The message a failed action answered with; omitted when the action succeeded or no message was recorded")
     request_id: Optional[StrictStr] = Field(default=None, description="The trace/request ID for correlation", alias="requestId")
@@ -51,7 +55,7 @@ class AuditEvent(BaseModel):
     user_agent: Optional[StrictStr] = Field(default=None, description="Of the client that performed the action", alias="userAgent")
     user_id: Optional[StrictStr] = Field(default=None, description="The ID of the user who performed the action", alias="userId")
     user_profile: Optional[Dict[str, Any]] = Field(default=None, description="The actor (name, email, roles) when they acted. Name and email are in full for org owners and admins, masked for everyone else and in exports.", alias="userProfile")
-    __properties: ClassVar[List[str]] = ["action", "actorType", "apiKeyId", "details", "dryRun", "eventType", "id", "ipAddress", "method", "orgId", "reason", "requestId", "resource", "resourceId", "resourceIds", "resourceName", "route", "source", "statusCode", "success", "summary", "timestamp", "userAgent", "userId", "userProfile"]
+    __properties: ClassVar[List[str]] = ["action", "actorType", "apiKeyId", "detailItems", "details", "dryRun", "eventType", "id", "ipAddress", "method", "network", "orgId", "reason", "requestId", "resource", "resourceId", "resourceIds", "resourceName", "route", "source", "statusCode", "success", "summary", "timestamp", "userAgent", "userId", "userProfile"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -92,6 +96,13 @@ class AuditEvent(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in detail_items (list)
+        _items = []
+        if self.detail_items:
+            for _item_detail_items in self.detail_items:
+                if _item_detail_items:
+                    _items.append(_item_detail_items.to_dict())
+            _dict['detailItems'] = _items
         return _dict
 
     @classmethod
@@ -107,12 +118,14 @@ class AuditEvent(BaseModel):
             "action": obj.get("action"),
             "actorType": obj.get("actorType"),
             "apiKeyId": obj.get("apiKeyId"),
+            "detailItems": [AuditDetailItem.from_dict(_item) for _item in obj["detailItems"]] if obj.get("detailItems") is not None else None,
             "details": obj.get("details"),
             "dryRun": obj.get("dryRun"),
             "eventType": obj.get("eventType"),
             "id": obj.get("id"),
             "ipAddress": obj.get("ipAddress"),
             "method": obj.get("method"),
+            "network": obj.get("network"),
             "orgId": obj.get("orgId"),
             "reason": obj.get("reason"),
             "requestId": obj.get("requestId"),
