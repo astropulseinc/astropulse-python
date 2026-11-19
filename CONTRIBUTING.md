@@ -29,8 +29,8 @@ Five of the generator's templates are overridden in `templates/python/`. `model_
 `model_enum` also gives each member the `label` and `description` the API document publishes;
 `exceptions` bases every generated exception on `astropulse.AstroPulseError`, and `rest` raises
 `astropulse.ApiConnectionError` for a request that gets no answer instead of urllib3's own
-error; `partial_header` writes one fixed header. Each is upstream's file for the pinned version with the changes
-described at its top: re-copy and re-apply them when the version changes.
+error; `partial_header` writes one fixed header. Each is upstream's file for the pinned version
+with the changes described at its top: re-copy and re-apply them when the version changes.
 
 The hand-written layer is small and stays that way: `_client.py` (the client, its retry and
 timeout policy, and `wait_until_serving`), `_errors.py`, `__init__.py` and `_version.py`, plus the
