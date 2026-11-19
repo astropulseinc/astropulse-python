@@ -48,4 +48,58 @@ class AcceleratorKind(str, Enum):
         member._value_ = value
         return member
 
+    @property
+    def label(self) -> str | None:
+        """The display name the API document gives this value.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _LABELS.get(self._value_)
+
+    @property
+    def description(self) -> str | None:
+        """What this value means, as the API document describes it.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _DESCRIPTIONS.get(self._value_)
+
+    @classmethod
+    def label_for(cls, value: str) -> str | None:
+        """The display name of a value, or ``None`` for one this version does not list."""
+        return _LABELS.get(value)
+
+    @classmethod
+    def description_for(cls, value: str) -> str | None:
+        """What a value means, or ``None`` for one this version does not list."""
+        return _DESCRIPTIONS.get(value)
+
+
+
+# The API document lists the labels and descriptions in the order of the values,
+# which is also the order of the members above.
+_LABELS: dict[str, str] = dict(zip(
+    [member._value_ for member in AcceleratorKind],
+    [
+        "GPU",
+        "Google Cloud TPU",
+        "Inference accelerator",
+        "AWS Neuron device",
+        "FPGA",
+        "Media accelerator",
+        "Other accelerator",
+    ],
+))
+_DESCRIPTIONS: dict[str, str] = dict(zip(
+    [member._value_ for member in AcceleratorKind],
+    [
+        "A graphics processing unit, such as an NVIDIA L4.",
+        "A Tensor Processing Unit that Google Cloud designs for machine learning.",
+        "A device built to run trained models, such as AWS Inferentia.",
+        "An AWS Inferentia or Trainium device, programmed with the AWS Neuron SDK.",
+        "A field-programmable gate array.",
+        "A device built for video encoding and transcoding.",
+        "An accelerator the catalog does not classify further.",
+    ],
+))
 

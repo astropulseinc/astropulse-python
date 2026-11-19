@@ -47,4 +47,56 @@ class ApplicationVersionState(str, Enum):
         member._value_ = value
         return member
 
+    @property
+    def label(self) -> str | None:
+        """The display name the API document gives this value.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _LABELS.get(self._value_)
+
+    @property
+    def description(self) -> str | None:
+        """What this value means, as the API document describes it.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _DESCRIPTIONS.get(self._value_)
+
+    @classmethod
+    def label_for(cls, value: str) -> str | None:
+        """The display name of a value, or ``None`` for one this version does not list."""
+        return _LABELS.get(value)
+
+    @classmethod
+    def description_for(cls, value: str) -> str | None:
+        """What a value means, or ``None`` for one this version does not list."""
+        return _DESCRIPTIONS.get(value)
+
+
+
+# The API document lists the labels and descriptions in the order of the values,
+# which is also the order of the members above.
+_LABELS: dict[str, str] = dict(zip(
+    [member._value_ for member in ApplicationVersionState],
+    [
+        "Pending",
+        "Successful",
+        "Failed",
+        "Superseded",
+        "Replaced",
+        "Unavailable",
+    ],
+))
+_DESCRIPTIONS: dict[str, str] = dict(zip(
+    [member._value_ for member in ApplicationVersionState],
+    [
+        "The version was applied and is still deploying; it cannot be rolled back to yet.",
+        "The version deployed and can be rolled back to.",
+        "The version did not deploy.",
+        "The version deployed and a newer one has replaced it.",
+        "A newer version replaced it before it finished deploying; it cannot be rolled back to.",
+        "The version is kept in history, but what it deployed can no longer be verified, so it cannot be rolled back to.",
+    ],
+))
 

@@ -51,4 +51,64 @@ class VaultLeaseKind(str, Enum):
         member._value_ = value
         return member
 
+    @property
+    def label(self) -> str | None:
+        """The display name the API document gives this value.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _LABELS.get(self._value_)
+
+    @property
+    def description(self) -> str | None:
+        """What this value means, as the API document describes it.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _DESCRIPTIONS.get(self._value_)
+
+    @classmethod
+    def label_for(cls, value: str) -> str | None:
+        """The display name of a value, or ``None`` for one this version does not list."""
+        return _LABELS.get(value)
+
+    @classmethod
+    def description_for(cls, value: str) -> str | None:
+        """What a value means, or ``None`` for one this version does not list."""
+        return _DESCRIPTIONS.get(value)
+
+
+
+# The API document lists the labels and descriptions in the order of the values,
+# which is also the order of the members above.
+_LABELS: dict[str, str] = dict(zip(
+    [member._value_ for member in VaultLeaseKind],
+    [
+        "Hugging Face token",
+        "Registry credentials",
+        "Model provider API key",
+        "Slack connection",
+        "Access policy API keys",
+        "Self-hosted AWS credentials",
+        "Self-hosted Google Cloud credentials",
+        "Amazon EKS credentials",
+        "GKE credentials",
+        "AKS credentials",
+    ],
+))
+_DESCRIPTIONS: dict[str, str] = dict(zip(
+    [member._value_ for member in VaultLeaseKind],
+    [
+        "Downloads gated models from Hugging Face on every cluster.",
+        "Pull images from a private container registry on every cluster.",
+        "Calls a hosted model provider.",
+        "Delivers notifications to Slack.",
+        "The keys that call the model endpoints an access policy protects.",
+        "Create, change and repair a self-hosted cluster on AWS.",
+        "Create, change and repair a self-hosted cluster on Google Cloud.",
+        "The AWS credentials an EKS cluster was created with.",
+        "The Google Cloud credentials a GKE cluster was created with.",
+        "The Azure credentials an AKS cluster was created with.",
+    ],
+))
 

@@ -1,8 +1,13 @@
 {{!
   Overrides openapi-generator v7.24.0's python/model_enum.mustache (see
-  scripts/generate.sh). The only change from upstream is _missing_: a value this
-  version of the package does not know parses to a member carrying that value,
-  rather than raising, so a value the API adds later cannot break a response.
+  scripts/generate.sh). Two changes from upstream:
+  - _missing_: a value this version of the package does not know parses to a
+    member carrying that value, rather than raising, so a value the API adds
+    later cannot break a response.
+  - label and description: each member carries the display name and meaning the
+    API document publishes for it (x-enum-labels, x-enum-descriptions), held in
+    module-level tables after the class, since a name in the class body would
+    become a member. A value the document does not list has neither.
   Re-copy the upstream file when the generator version changes, then re-apply.
 }}
 from __future__ import annotations
@@ -47,6 +52,32 @@ class {{classname}}({{vendorExtensions.x-py-enum-type}}, Enum):
         member._value_ = value
         return member
 
+    @property
+    def label(self) -> str | None:
+        """The display name the API document gives this value.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _LABELS.get(self._value_)
+
+    @property
+    def description(self) -> str | None:
+        """What this value means, as the API document describes it.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _DESCRIPTIONS.get(self._value_)
+
+    @classmethod
+    def label_for(cls, value: {{vendorExtensions.x-py-enum-type}}) -> str | None:
+        """The display name of a value, or ``None`` for one this version does not list."""
+        return _LABELS.get(value)
+
+    @classmethod
+    def description_for(cls, value: {{vendorExtensions.x-py-enum-type}}) -> str | None:
+        """What a value means, or ``None`` for one this version does not list."""
+        return _DESCRIPTIONS.get(value)
+
     {{#defaultValue}}
 
     #
@@ -56,3 +87,23 @@ class {{classname}}({{vendorExtensions.x-py-enum-type}}, Enum):
             return cls.{{{.}}}
     {{/defaultValue}}
 {{/allowableValues}}
+
+
+# The API document lists the labels and descriptions in the order of the values,
+# which is also the order of the members above.
+_LABELS: dict[{{vendorExtensions.x-py-enum-type}}, str] = dict(zip(
+    [member._value_ for member in {{classname}}],
+    [
+{{#vendorExtensions.x-enum-labels}}
+        {{#lambda.pythonStringLiteral}}{{{.}}}{{/lambda.pythonStringLiteral}},
+{{/vendorExtensions.x-enum-labels}}
+    ],
+))
+_DESCRIPTIONS: dict[{{vendorExtensions.x-py-enum-type}}, str] = dict(zip(
+    [member._value_ for member in {{classname}}],
+    [
+{{#vendorExtensions.x-enum-descriptions}}
+        {{#lambda.pythonStringLiteral}}{{{.}}}{{/lambda.pythonStringLiteral}},
+{{/vendorExtensions.x-enum-descriptions}}
+    ],
+))
