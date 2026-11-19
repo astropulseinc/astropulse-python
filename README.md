@@ -125,16 +125,31 @@ application name or the Hugging Face repository.
 ## Errors
 
 ```python
-from astropulse import NotFoundException, OpenApiException
+from astropulse import AstroPulseError, NotFoundException
 
 try:
     ap.applications.get_application("qwen-chat")
 except NotFoundException as error:
     print(error.data.code)      # NOT_FOUND: branch on this, not on the message
     print(error.data.trace_id)  # include this in a support request
-except OpenApiException as error:
-    print(error)                # anything else the client raises
+except AstroPulseError as error:
+    print(error)                # anything else the package raises
 ```
+
+Every error the platform, the network or the SDK's own setup causes derives from
+`AstroPulseError`:
+
+| Error                                         | When                                                                     |
+| --------------------------------------------- | ------------------------------------------------------------------------ |
+| `ApiException` and its per-status subclasses  | The platform answered with an error.                                     |
+| `ApiConnectionError`                          | The request got no answer: the host refused it, or the connection broke. |
+| `ApiTimeoutError` (also a `TimeoutError`)     | The platform did not answer within the client's `timeout`.               |
+| `ApiValueError`, `ApiTypeError`, ...          | The SDK could not build the request, such as no API key being found.     |
+| `DeploymentFailed`, `WaitTimeout`             | `wait_until_serving` saw a failed deploy, or ran out of time.            |
+
+A programming error is not one of these, so `except AstroPulseError` never hides a bug. Arguments
+that conflict or are out of range raise the builtin `TypeError` or `ValueError`. The generated
+methods validate their arguments and raise `pydantic.ValidationError`, which is a `ValueError`.
 
 ## Configuration
 

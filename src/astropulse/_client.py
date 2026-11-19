@@ -35,6 +35,7 @@ from ._generated.api.service_accounts_api import ServiceAccountsApi
 from ._generated.api.users_api import UsersApi
 from ._generated.api_client import ApiClient
 from ._generated.configuration import Configuration
+from ._generated.exceptions import ApiValueError
 from ._generated.models.application import Application
 from ._generated.models.application_status import ApplicationStatus
 from ._version import __version__
@@ -160,7 +161,9 @@ class Client:
 
         key = api_key or os.environ.get("ASTROPULSE_API_KEY")
         if not key and api_client is None:
-            raise ValueError(
+            # An SDK error, unlike the argument checks around it: the key is
+            # resolved from the environment, not only from what was passed.
+            raise ApiValueError(
                 "No API key. Pass api_key=..., or set ASTROPULSE_API_KEY. "
                 "Create a key in the console under Settings, API Keys."
             )

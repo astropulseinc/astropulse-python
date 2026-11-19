@@ -14,14 +14,17 @@ SPEC="${1:-${ROOT}/spec/openapi.yaml}"
 command -v docker >/dev/null || { echo "docker is required"; exit 1; }
 
 rm -rf "${ROOT}/src/astropulse/_generated"
-# templates/python overrides three of the generator's own templates. So that an
+# templates/python overrides five of the generator's own templates. So that an
 # enum value the API adds later parses instead of raising, model_enum keeps an
 # unlisted value as a member carrying it, and model_generic does not check an
 # inline enum field against the values listed. model_enum also gives each member
 # the label and description the API document publishes (x-enum-labels,
-# x-enum-descriptions). Each is upstream's file for the version above with the
-# changes described at its top. partial_header is a fixed header, so a new
-# API version or description rewrites no file whose code is unchanged.
+# x-enum-descriptions). exceptions bases the generated exceptions on
+# astropulse.AstroPulseError, so one class catches every error, and rest
+# raises astropulse.ApiConnectionError, not urllib3's own error, for a request
+# that gets no answer. Each is upstream's file for the version above with the
+# changes described at its top. partial_header is a fixed header, so a new API
+# version or description rewrites no file whose code is unchanged.
 # Run as the caller, not as root: the container writes into the mounted
 # repository, and files it leaves owned by root cannot be moved or removed
 # afterwards. Docker Desktop hides this by remapping ownership; on Linux, and so

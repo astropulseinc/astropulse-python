@@ -1,13 +1,19 @@
 """The official Python SDK for the AstroPulse Platform API.
 
 The resources on :class:`Client` are generated from the platform's OpenAPI
-document. The exceptions come from two places: the generated client raises one
-per status -- :class:`NotFoundException` and its siblings, all of them
-:class:`ApiException` -- and this package raises :class:`DeploymentFailed` and
-:class:`WaitTimeout` while waiting for work the platform does asynchronously.
+document. Every error the platform, the network or the SDK's own setup causes
+is an :class:`AstroPulseError`: the generated client raises one per
+status -- :class:`NotFoundException` and its siblings, all of them
+:class:`ApiException` -- or :class:`ApiConnectionError` (and
+:class:`ApiTimeoutError`) when a request gets no answer, and this package raises
+:class:`DeploymentFailed` and :class:`WaitTimeout` while waiting for work the
+platform does asynchronously.
 
-Catch :class:`OpenApiException` to catch everything the client can raise,
-including the argument errors it checks before sending anything.
+Catch :class:`AstroPulseError` to handle all of them. A programming error is not
+one of these, so that clause never hides a bug: conflicting or out-of-range
+arguments raise the builtin ``TypeError`` or ``ValueError``, and the generated
+methods raise :class:`pydantic.ValidationError` (a ``ValueError``) for an
+argument of the wrong type.
 
 ``__api_version__`` is the platform API version the package was generated
 from, and ``__version__`` follows it: 1.0.5 is generated from API v1.0.5, and
@@ -23,7 +29,13 @@ from ._client import (
     SERVING,
     Client,
 )
-from ._errors import AstroPulseError, DeploymentFailed, WaitTimeout
+from ._errors import (
+    ApiConnectionError,
+    ApiTimeoutError,
+    AstroPulseError,
+    DeploymentFailed,
+    WaitTimeout,
+)
 from ._generated.exceptions import (  # noqa: F401
     ApiAttributeError,
     ApiException,
@@ -48,8 +60,12 @@ __all__ = [
     "IN_FLIGHT",
     "DEFAULT_RETRIES",
     "DEFAULT_TIMEOUT",
-    # raised by this package, while waiting
+    # the base of every error below
     "AstroPulseError",
+    # raised when a request gets no answer
+    "ApiConnectionError",
+    "ApiTimeoutError",
+    # raised by this package, while waiting
     "DeploymentFailed",
     "WaitTimeout",
     # raised by the generated client, per status

@@ -15,6 +15,7 @@ from urllib.parse import urlparse
 
 import urllib3
 
+from astropulse._errors import connection_error
 from astropulse._generated.exceptions import ApiException, ApiValueError
 
 SUPPORTED_SOCKS_PROXIES = {"socks5", "socks5h", "socks4", "socks4a"}
@@ -79,7 +80,10 @@ class RESTResponse(io.IOBase):
 
     def read(self):
         if self.data is None:
-            self.data = self.response.data
+            try:
+                self.data = self.response.data
+            except urllib3.exceptions.HTTPError as e:
+                raise connection_error(e) from e
         return self.data
 
     @property
@@ -303,5 +307,7 @@ class RESTClientObject:
         except urllib3.exceptions.SSLError as e:
             msg = "\n".join([type(e).__name__, str(e)])
             raise ApiException(status=0, reason=msg)
+        except urllib3.exceptions.HTTPError as e:
+            raise connection_error(e) from e
 
         return RESTResponse(r)
