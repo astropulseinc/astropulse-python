@@ -1,17 +1,19 @@
 """The official Python SDK for the AstroPulse Platform API.
 
 The resources on :class:`Client` are generated from the platform's OpenAPI
-document. Every error the platform, the network or the client's own checks
-cause is an :class:`AstroPulseError`: the generated client raises one per
+document. Every error the platform, the network or the SDK's own setup causes
+is an :class:`AstroPulseError`: the generated client raises one per
 status -- :class:`NotFoundException` and its siblings, all of them
 :class:`ApiException` -- or :class:`ApiConnectionError` (and
 :class:`ApiTimeoutError`) when a request gets no answer, and this package raises
 :class:`DeploymentFailed` and :class:`WaitTimeout` while waiting for work the
 platform does asynchronously.
 
-Catch :class:`AstroPulseError` to handle all of them. An argument of the wrong
-type is a programming error, not one of these: the generated methods validate
-their arguments and raise :class:`pydantic.ValidationError` (a ``ValueError``).
+Catch :class:`AstroPulseError` to handle all of them. A programming error is not
+one of these, so that clause never hides a bug: conflicting or out-of-range
+arguments raise the builtin ``TypeError`` or ``ValueError``, and the generated
+methods raise :class:`pydantic.ValidationError` (a ``ValueError``) for an
+argument of the wrong type.
 
 ``__api_version__`` is the platform API version the package was generated
 from, and ``__version__`` follows it: 1.0.5 is generated from API v1.0.5, and

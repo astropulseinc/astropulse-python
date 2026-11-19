@@ -80,7 +80,8 @@ def test_a_prepared_client_cannot_be_half_configured() -> None:
     prepared = Client("test-key", base_url="http://localhost:9080")._api_client
     with pytest.raises(TypeError, match="api_client") as raised:
         Client("another-key", api_client=prepared)
-    assert isinstance(raised.value, AstroPulseError)
+    # A programming error stays a builtin, so `except AstroPulseError` does not hide it.
+    assert not isinstance(raised.value, AstroPulseError)
 
 
 class _Applications:
@@ -155,7 +156,7 @@ def test_polling_faster_than_zero_is_refused() -> None:
     ap = Client("test-key", base_url="http://localhost:9080")
     with pytest.raises(ValueError, match="poll_interval") as raised:
         ap.wait_until_serving("qwen-chat", poll_interval=0)
-    assert isinstance(raised.value, AstroPulseError)
+    assert not isinstance(raised.value, AstroPulseError)
     ap.close()
 
 
