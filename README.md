@@ -136,9 +136,19 @@ except AstroPulseError as error:
     print(error)                # anything else the package raises
 ```
 
-Every exception the package raises derives from `AstroPulseError`: the per-status API errors
-(`ApiException` and its subclasses), the argument errors the client checks before sending, and
-`DeploymentFailed` and `WaitTimeout` from `wait_until_serving`.
+Every error the platform, the network or the client's own checks cause derives from
+`AstroPulseError`:
+
+| Error                                         | When                                                                     |
+| --------------------------------------------- | ------------------------------------------------------------------------ |
+| `ApiException` and its per-status subclasses  | The platform answered with an error.                                     |
+| `ApiConnectionError`                          | The request got no answer: the host refused it, or the connection broke. |
+| `ApiTimeoutError` (also a `TimeoutError`)     | The platform did not answer within the client's `timeout`.               |
+| `ApiTypeError`, `ApiValueError`, ...          | The client refused the call before sending it, such as no API key.       |
+| `DeploymentFailed`, `WaitTimeout`             | `wait_until_serving` saw a failed deploy, or ran out of time.            |
+
+An argument of the wrong type is a programming error rather than one of these: the generated
+methods validate their arguments and raise `pydantic.ValidationError`, which is a `ValueError`.
 
 ## Configuration
 

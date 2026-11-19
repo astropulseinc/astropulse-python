@@ -35,6 +35,7 @@ from ._generated.api.service_accounts_api import ServiceAccountsApi
 from ._generated.api.users_api import UsersApi
 from ._generated.api_client import ApiClient
 from ._generated.configuration import Configuration
+from ._generated.exceptions import ApiTypeError, ApiValueError
 from ._generated.models.application import Application
 from ._generated.models.application_status import ApplicationStatus
 from ._version import __version__
@@ -153,14 +154,14 @@ class Client:
             or timeout is not DEFAULT_TIMEOUT
             or retries is not DEFAULT_RETRIES
         ):
-            raise TypeError(
+            raise ApiTypeError(
                 "api_client carries its own host, credentials, timeout and retries; "
                 "pass it alone, or let the client build one from api_key/base_url."
             )
 
         key = api_key or os.environ.get("ASTROPULSE_API_KEY")
         if not key and api_client is None:
-            raise ValueError(
+            raise ApiValueError(
                 "No API key. Pass api_key=..., or set ASTROPULSE_API_KEY. "
                 "Create a key in the console under Settings, API Keys."
             )
@@ -216,7 +217,7 @@ class Client:
         reaches a state it cannot serve from.
         """
         if poll_interval <= 0:
-            raise ValueError("poll_interval must be greater than zero")
+            raise ApiValueError("poll_interval must be greater than zero")
 
         deadline = time.monotonic() + timeout
         while True:

@@ -1,14 +1,17 @@
 """The official Python SDK for the AstroPulse Platform API.
 
 The resources on :class:`Client` are generated from the platform's OpenAPI
-document. Every exception the package raises is an :class:`AstroPulseError`:
-the generated client raises one per status -- :class:`NotFoundException` and its
-siblings, all of them :class:`ApiException` -- and this package raises
+document. Every error the platform, the network or the client's own checks
+cause is an :class:`AstroPulseError`: the generated client raises one per
+status -- :class:`NotFoundException` and its siblings, all of them
+:class:`ApiException` -- or :class:`ApiConnectionError` (and
+:class:`ApiTimeoutError`) when a request gets no answer, and this package raises
 :class:`DeploymentFailed` and :class:`WaitTimeout` while waiting for work the
 platform does asynchronously.
 
-Catch :class:`AstroPulseError` to catch everything the package can raise,
-including the argument errors the client checks before sending anything.
+Catch :class:`AstroPulseError` to handle all of them. An argument of the wrong
+type is a programming error, not one of these: the generated methods validate
+their arguments and raise :class:`pydantic.ValidationError` (a ``ValueError``).
 
 ``__api_version__`` is the platform API version the package was generated
 from, and ``__version__`` follows it: 1.0.5 is generated from API v1.0.5, and
@@ -24,7 +27,13 @@ from ._client import (
     SERVING,
     Client,
 )
-from ._errors import AstroPulseError, DeploymentFailed, WaitTimeout
+from ._errors import (
+    ApiConnectionError,
+    ApiTimeoutError,
+    AstroPulseError,
+    DeploymentFailed,
+    WaitTimeout,
+)
 from ._generated.exceptions import (  # noqa: F401
     ApiAttributeError,
     ApiException,
@@ -51,6 +60,9 @@ __all__ = [
     "DEFAULT_TIMEOUT",
     # the base of every error below
     "AstroPulseError",
+    # raised when a request gets no answer
+    "ApiConnectionError",
+    "ApiTimeoutError",
     # raised by this package, while waiting
     "DeploymentFailed",
     "WaitTimeout",

@@ -10,9 +10,11 @@ import urllib3
 
 from astropulse import (
     DEFAULT_RETRIES,
+    ApiConnectionError,
+    ApiTimeoutError,
+    AstroPulseError,
     Client,
     DeploymentFailed,
-    OpenApiException,
     WaitTimeout,
 )
 from astropulse._client import _RESOURCES
@@ -50,8 +52,9 @@ def test_the_key_can_come_from_the_environment(monkeypatch: pytest.MonkeyPatch) 
     assert Client()._api_client.configuration.api_key["ApiKeyAuth"] == "from-env"
 
     monkeypatch.delenv("ASTROPULSE_API_KEY")
-    with pytest.raises(ValueError, match="ASTROPULSE_API_KEY"):
+    with pytest.raises(ValueError, match="ASTROPULSE_API_KEY") as raised:
         Client()
+    assert isinstance(raised.value, AstroPulseError)
 
 
 def test_the_host_comes_from_the_cli_variable(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -75,8 +78,9 @@ def test_no_other_variable_sets_the_host(monkeypatch: pytest.MonkeyPatch) -> Non
 def test_a_prepared_client_cannot_be_half_configured() -> None:
     """Passing api_client alongside api_key used to ignore the key in silence."""
     prepared = Client("test-key", base_url="http://localhost:9080")._api_client
-    with pytest.raises(TypeError, match="api_client"):
+    with pytest.raises(TypeError, match="api_client") as raised:
         Client("another-key", api_client=prepared)
+    assert isinstance(raised.value, AstroPulseError)
 
 
 class _Applications:
@@ -149,8 +153,9 @@ def test_waiting_gives_up_rather_than_hanging(monkeypatch: pytest.MonkeyPatch) -
 
 def test_polling_faster_than_zero_is_refused() -> None:
     ap = Client("test-key", base_url="http://localhost:9080")
-    with pytest.raises(ValueError, match="poll_interval"):
+    with pytest.raises(ValueError, match="poll_interval") as raised:
         ap.wait_until_serving("qwen-chat", poll_interval=0)
+    assert isinstance(raised.value, AstroPulseError)
     ap.close()
 
 
@@ -174,9 +179,7 @@ def test_a_request_that_never_answers_fails_rather_than_hanging() -> None:
         retries=None,
     )
     started = time.monotonic()
-    # urllib3 raises its own error for a timeout; the SDK's exceptions are for
-    # answers the API gave.
-    with pytest.raises((OpenApiException, urllib3.exceptions.HTTPError)):
+    with pytest.raises(ApiTimeoutError) as raised:
         ap.clusters.list_clusters()
     elapsed = time.monotonic() - started
     ap.close()
@@ -185,6 +188,31 @@ def test_a_request_that_never_answers_fails_rather_than_hanging() -> None:
     listener.close()
 
     assert elapsed < 5, f"the request took {elapsed:.1f}s, so the read timeout did not apply"
+    # One except clause catches it, and so do the ones written for urllib3.
+    assert isinstance(raised.value, AstroPulseError)
+    assert isinstance(raised.value, TimeoutError)
+    assert isinstance(raised.value, urllib3.exceptions.HTTPError)
+    assert isinstance(raised.value.__cause__, urllib3.exceptions.HTTPError)
+
+
+def _closed_port() -> int:
+    with socket.socket() as probe:
+        probe.bind(("127.0.0.1", 0))
+        return int(probe.getsockname()[1])
+
+
+@pytest.mark.parametrize("retries", [None, urllib3.Retry(total=1, backoff_factor=0)])
+def test_a_refused_connection_is_a_connection_error_not_a_timeout(
+    retries: urllib3.Retry | None,
+) -> None:
+    """Retried or not: after retrying, urllib3 wraps the refusal in MaxRetryError."""
+    ap = Client("test-key", base_url=f"http://127.0.0.1:{_closed_port()}", retries=retries)
+    with pytest.raises(ApiConnectionError) as raised:
+        ap.clusters.list_clusters()
+    ap.close()
+
+    assert not isinstance(raised.value, ApiTimeoutError)
+    assert isinstance(raised.value, AstroPulseError)
 
 
 def test_the_client_retries_a_rate_limit_but_never_a_post() -> None:

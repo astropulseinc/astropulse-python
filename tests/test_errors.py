@@ -8,13 +8,18 @@ SDKs. The generated hierarchy underneath is unchanged, so code that catches
 
 from __future__ import annotations
 
+import socket
+
 import pytest
+import urllib3
 
 import astropulse
 from astropulse import (
     ApiAttributeError,
+    ApiConnectionError,
     ApiException,
     ApiKeyError,
+    ApiTimeoutError,
     ApiTypeError,
     ApiValueError,
     AstroPulseError,
@@ -29,6 +34,8 @@ from astropulse import (
     UnprocessableEntityException,
     WaitTimeout,
 )
+from astropulse._errors import connection_error
+from astropulse._generated.rest import RESTResponse
 from astropulse.models import ApplicationStatus
 
 API_ERRORS = [
@@ -90,3 +97,62 @@ def test_waiting_errors_are_astropulse_errors_and_keep_their_builtin_bases() -> 
     assert isinstance(timeout, AstroPulseError) and isinstance(timeout, TimeoutError)
     assert not isinstance(failed, OpenApiException)
     assert str(failed) == "qwen-chat is Failed: image pull"
+
+
+_POOL = urllib3.HTTPConnectionPool("127.0.0.1", 9)
+_CONNECTION = urllib3.connection.HTTPConnection("127.0.0.1", 9)
+_REFUSED = urllib3.exceptions.NewConnectionError(_CONNECTION, "Connection refused")
+_UNRESOLVED = urllib3.exceptions.NameResolutionError(
+    "nowhere.invalid", _CONNECTION, socket.gaierror("no host")
+)
+_CONNECT_TIMEOUT = urllib3.exceptions.ConnectTimeoutError(_POOL, "timed out connecting")
+_READ_TIMEOUT = urllib3.exceptions.ReadTimeoutError(_POOL, "/", "timed out reading")
+_RESET = urllib3.exceptions.ProtocolError("Connection aborted.", ConnectionResetError())
+
+
+@pytest.mark.parametrize(
+    ("error", "expected"),
+    [
+        (_REFUSED, ApiConnectionError),
+        (_UNRESOLVED, ApiConnectionError),
+        (_RESET, ApiConnectionError),
+        (_CONNECT_TIMEOUT, ApiTimeoutError),
+        (_READ_TIMEOUT, ApiTimeoutError),
+        (urllib3.exceptions.MaxRetryError(_POOL, "/", _REFUSED), ApiConnectionError),
+        (urllib3.exceptions.MaxRetryError(_POOL, "/", _READ_TIMEOUT), ApiTimeoutError),
+        (urllib3.exceptions.MaxRetryError(_POOL, "/", None), ApiConnectionError),
+    ],
+)
+def test_a_transport_error_is_classified_by_what_went_wrong(
+    error: urllib3.exceptions.HTTPError, expected: type[ApiConnectionError]
+) -> None:
+    """A refused or unresolvable host is not a timeout, although urllib3 derives
+    those errors from ConnectTimeoutError; after retries, the reason decides."""
+    converted = connection_error(error)
+
+    assert type(converted) is expected
+    assert str(error) in str(converted)
+
+
+def test_connection_errors_keep_the_bases_callers_already_catch() -> None:
+    assert issubclass(ApiConnectionError, AstroPulseError)
+    assert issubclass(ApiConnectionError, urllib3.exceptions.HTTPError)
+    assert issubclass(ApiTimeoutError, ApiConnectionError)
+    assert issubclass(ApiTimeoutError, TimeoutError)
+    assert not issubclass(ApiConnectionError, OpenApiException)
+
+
+def test_a_body_that_breaks_off_while_reading_is_a_connection_error() -> None:
+    """The body is read after request() returns, so it is wrapped there too."""
+
+    class _BrokenResponse:
+        status = 200
+        reason = "OK"
+
+        @property
+        def data(self) -> bytes:
+            raise _READ_TIMEOUT
+
+    with pytest.raises(ApiTimeoutError) as raised:
+        RESTResponse(_BrokenResponse()).read()  # type: ignore[no-untyped-call]
+    assert raised.value.__cause__ is _READ_TIMEOUT
