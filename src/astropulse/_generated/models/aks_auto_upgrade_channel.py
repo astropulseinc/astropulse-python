@@ -46,4 +46,54 @@ class AKSAutoUpgradeChannel(str, Enum):
         member._value_ = value
         return member
 
+    @property
+    def label(self) -> str | None:
+        """The display name the API document gives this value.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _LABELS.get(self._value_)
+
+    @property
+    def description(self) -> str | None:
+        """What this value means, as the API document describes it.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _DESCRIPTIONS.get(self._value_)
+
+    @classmethod
+    def label_for(cls, value: str) -> str | None:
+        """The display name of a value, or ``None`` for one this version does not list."""
+        return _LABELS.get(value)
+
+    @classmethod
+    def description_for(cls, value: str) -> str | None:
+        """What a value means, or ``None`` for one this version does not list."""
+        return _DESCRIPTIONS.get(value)
+
+
+
+# The API document lists the labels and descriptions in the order of the values,
+# which is also the order of the members above.
+_LABELS: dict[str, str] = dict(zip(
+    [member._value_ for member in AKSAutoUpgradeChannel],
+    [
+        "Stable",
+        "Patch",
+        "Rapid",
+        "Node image",
+        "None",
+    ],
+))
+_DESCRIPTIONS: dict[str, str] = dict(zip(
+    [member._value_ for member in AKSAutoUpgradeChannel],
+    [
+        "Upgrades to the latest patch of the previous minor version.",
+        "Upgrades to the latest patch of the current minor version.",
+        "Upgrades to the latest patch of the newest minor version.",
+        "Upgrades the node image only. The Kubernetes version stays the same.",
+        "Turns off automatic upgrades.",
+    ],
+))
 

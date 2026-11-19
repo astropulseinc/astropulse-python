@@ -44,4 +44,50 @@ class WorkloadIdentityStatus(str, Enum):
         member._value_ = value
         return member
 
+    @property
+    def label(self) -> str | None:
+        """The display name the API document gives this value.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _LABELS.get(self._value_)
+
+    @property
+    def description(self) -> str | None:
+        """What this value means, as the API document describes it.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _DESCRIPTIONS.get(self._value_)
+
+    @classmethod
+    def label_for(cls, value: str) -> str | None:
+        """The display name of a value, or ``None`` for one this version does not list."""
+        return _LABELS.get(value)
+
+    @classmethod
+    def description_for(cls, value: str) -> str | None:
+        """What a value means, or ``None`` for one this version does not list."""
+        return _DESCRIPTIONS.get(value)
+
+
+
+# The API document lists the labels and descriptions in the order of the values,
+# which is also the order of the members above.
+_LABELS: dict[str, str] = dict(zip(
+    [member._value_ for member in WorkloadIdentityStatus],
+    [
+        "Available",
+        "Missing",
+        "User managed",
+    ],
+))
+_DESCRIPTIONS: dict[str, str] = dict(zip(
+    [member._value_ for member in WorkloadIdentityStatus],
+    [
+        "Workloads on the cluster can sign in to its cloud as an identity of their own.",
+        "The cluster is not set up for workloads to sign in to its cloud as an identity of their own.",
+        "AstroPulse did not create this cluster, so its cloud identity is yours to manage; bind one with an add-on's or model's identity.",
+    ],
+))
 

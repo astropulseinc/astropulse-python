@@ -51,4 +51,64 @@ class AMIFamily(str, Enum):
         member._value_ = value
         return member
 
+    @property
+    def label(self) -> str | None:
+        """The display name the API document gives this value.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _LABELS.get(self._value_)
+
+    @property
+    def description(self) -> str | None:
+        """What this value means, as the API document describes it.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _DESCRIPTIONS.get(self._value_)
+
+    @classmethod
+    def label_for(cls, value: str) -> str | None:
+        """The display name of a value, or ``None`` for one this version does not list."""
+        return _LABELS.get(value)
+
+    @classmethod
+    def description_for(cls, value: str) -> str | None:
+        """What a value means, or ``None`` for one this version does not list."""
+        return _DESCRIPTIONS.get(value)
+
+
+
+# The API document lists the labels and descriptions in the order of the values,
+# which is also the order of the members above.
+_LABELS: dict[str, str] = dict(zip(
+    [member._value_ for member in AMIFamily],
+    [
+        "Amazon Linux 2023",
+        "Bottlerocket",
+        "Ubuntu 20.04",
+        "Ubuntu 22.04",
+        "Ubuntu 24.04",
+        "Ubuntu 26.04",
+        "Ubuntu Pro 20.04",
+        "Ubuntu Pro 22.04",
+        "Ubuntu Pro 24.04",
+        "Ubuntu Pro 26.04",
+    ],
+))
+_DESCRIPTIONS: dict[str, str] = dict(zip(
+    [member._value_ for member in AMIFamily],
+    [
+        "The current Amazon Linux release.",
+        "A minimal operating system from AWS built for running containers.",
+        "Ubuntu 20.04 LTS. Standard support has ended.",
+        "Ubuntu 22.04 LTS.",
+        "Ubuntu 24.04 LTS.",
+        "Ubuntu 26.04 LTS.",
+        "Ubuntu Pro 20.04, with extended security maintenance from Canonical.",
+        "Ubuntu Pro 22.04, with extended security maintenance from Canonical.",
+        "Ubuntu Pro 24.04, with extended security maintenance from Canonical.",
+        "Ubuntu Pro 26.04, with extended security maintenance from Canonical.",
+    ],
+))
 

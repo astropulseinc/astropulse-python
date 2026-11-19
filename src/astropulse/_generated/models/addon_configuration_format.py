@@ -54,4 +54,70 @@ class AddonConfigurationFormat(str, Enum):
         member._value_ = value
         return member
 
+    @property
+    def label(self) -> str | None:
+        """The display name the API document gives this value.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _LABELS.get(self._value_)
+
+    @property
+    def description(self) -> str | None:
+        """What this value means, as the API document describes it.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _DESCRIPTIONS.get(self._value_)
+
+    @classmethod
+    def label_for(cls, value: str) -> str | None:
+        """The display name of a value, or ``None`` for one this version does not list."""
+        return _LABELS.get(value)
+
+    @classmethod
+    def description_for(cls, value: str) -> str | None:
+        """What a value means, or ``None`` for one this version does not list."""
+        return _DESCRIPTIONS.get(value)
+
+
+
+# The API document lists the labels and descriptions in the order of the values,
+# which is also the order of the members above.
+_LABELS: dict[str, str] = dict(zip(
+    [member._value_ for member in AddonConfigurationFormat],
+    [
+        "Quantity",
+        "Duration",
+        "Email address",
+        "URL",
+        "DNS label",
+        "DNS subdomain",
+        "Key and value",
+        "Decimal",
+        "Currency code",
+        "IAM role ARN",
+        "Capacity reservation ID",
+        "Google service account",
+        "UUID",
+    ],
+))
+_DESCRIPTIONS: dict[str, str] = dict(zip(
+    [member._value_ for member in AddonConfigurationFormat],
+    [
+        "A Kubernetes resource quantity, such as 250m or 512Mi.",
+        "A length of time in hours, minutes and seconds, such as 90s, 10m or 1h30m.",
+        "An email address.",
+        "An absolute http or https URL.",
+        "A name of lowercase letters, digits and '-', at most 63 characters, such as team-a.",
+        "A name of lowercase letters, digits, '-' and '.', at most 253 characters.",
+        "A key and a value written key=value, such as team=ml.",
+        "A non-negative decimal number, such as 0.035.",
+        "A three-letter ISO 4217 currency code, such as USD.",
+        "The ARN of an AWS IAM role, such as `arn:aws:iam::123456789012:role/name`.",
+        "An EC2 capacity reservation ID, such as cr-0123456789abcdef0.",
+        "A Google service account's email, such as dns@my-project.iam.gserviceaccount.com.",
+        "A UUID, such as 11111111-2222-3333-4444-555555555555.",
+    ],
+))
 

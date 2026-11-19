@@ -52,4 +52,66 @@ class CloudConnectFailureReason(str, Enum):
         member._value_ = value
         return member
 
+    @property
+    def label(self) -> str | None:
+        """The display name the API document gives this value.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _LABELS.get(self._value_)
+
+    @property
+    def description(self) -> str | None:
+        """What this value means, as the API document describes it.
+
+        ``None`` for a value this version of the package does not list.
+        """
+        return _DESCRIPTIONS.get(self._value_)
+
+    @classmethod
+    def label_for(cls, value: str) -> str | None:
+        """The display name of a value, or ``None`` for one this version does not list."""
+        return _LABELS.get(value)
+
+    @classmethod
+    def description_for(cls, value: str) -> str | None:
+        """What a value means, or ``None`` for one this version does not list."""
+        return _DESCRIPTIONS.get(value)
+
+
+
+# The API document lists the labels and descriptions in the order of the values,
+# which is also the order of the members above.
+_LABELS: dict[str, str] = dict(zip(
+    [member._value_ for member in CloudConnectFailureReason],
+    [
+        "AstroPulse sign-in unavailable",
+        "Identity pool not found",
+        "Identity pool disabled",
+        "Identity pool deleted",
+        "Service account not found",
+        "Application not in tenant",
+        "Sign-in refused",
+        "Access not granted",
+        "Target not found",
+        "Cloud unavailable",
+        "Unknown",
+    ],
+))
+_DESCRIPTIONS: dict[str, str] = dict(zip(
+    [member._value_ for member in CloudConnectFailureReason],
+    [
+        "AstroPulse could not sign in to your cloud with its own identity.",
+        "The project has no usable workload identity pool or provider for AstroPulse.",
+        "The workload identity pool or provider for AstroPulse is disabled.",
+        "The workload identity pool or provider for AstroPulse was deleted.",
+        "The service account the setup creates is not in the project.",
+        "The AstroPulse application is not in your Microsoft Entra tenant.",
+        "Your cloud refused AstroPulse's sign-in.",
+        "AstroPulse signed in, but the access the setup grants is missing or still taking effect.",
+        "The subscription or resource group named for the connection does not exist.",
+        "The cloud could not be reached, limited the check, or failed it.",
+        "The check failed for another reason; the message says what happened.",
+    ],
+))
 
